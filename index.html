@@ -123,12 +123,6 @@
             const [isTyping, setIsTyping] = useState(false);
             const chatEndRef = useRef(null);
 
-            // Modal State
-            const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-            const [orderForm, setOrderForm] = useState({ name: '', phone: '', details: '' });
-            const [isSubmitting, setIsSubmitting] = useState(false);
-            const [submitSuccess, setSubmitSuccess] = useState(false);
-
             useEffect(() => {
                 const isAccepted = localStorage.getItem('pdpa_accepted');
                 if (!isAccepted) {
@@ -233,20 +227,6 @@ ${details ? `📝 รายละเอียด: ${details}` : ''}
                 handleSendMessage(text);
             };
 
-            const handleOrderSubmit = (e) => {
-                e.preventDefault();
-                setIsSubmitting(true);
-                setTimeout(() => {
-                    setIsSubmitting(false);
-                    setSubmitSuccess(true);
-                    setOrderForm({ name: '', phone: '', details: '' });
-                    setTimeout(() => {
-                        setSubmitSuccess(false);
-                        setIsOrderModalOpen(false);
-                    }, 3000);
-                }, 1500);
-            };
-
             const reviews = [
                 {
                     id: 1,
@@ -343,7 +323,7 @@ ${details ? `📝 รายละเอียด: ${details}` : ''}
                                 <span className="flex items-center gap-1"><MapPin size={12} className="text-yellow-400"/> โรงงานสระบุรี (ส่งทั่วไทย)</span>
                             </div>
                             <div className="flex gap-4">
-                                <span className="flex items-center gap-1"><ShieldCheck size={12} className="text-green-400"/> ISO 9001:2015 Verified</span>
+                                <span className="flex items-center gap-1"><ShieldCheck size={12} className="text-green-400"/> โรงงานผลิตโดยตรง มาตรฐาน ISO</span>
                             </div>
                         </div>
                     </div>
@@ -372,12 +352,14 @@ ${details ? `📝 รายละเอียด: ${details}` : ''}
                                     <a href="#franchise" className="hover:text-red-600 transition-colors">แฟรนไชส์ไปรษณีย์</a>
                                     <a href="#reviews" className="hover:text-red-600 transition-colors">รีวิวลูกค้า</a>
                                     <a href="#blog" className="hover:text-red-600 transition-colors">บทความ</a>
-                                    <button 
-                                        onClick={() => setIsOrderModalOpen(true)}
+                                    <a 
+                                        href="https://lin.ee/Torcu70"
+                                        target="_blank"
+                                        rel="noreferrer"
                                         className="bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition-all shadow-md shadow-red-200 flex items-center gap-2"
                                     >
                                         <FileText size={16} /> ขอใบเสนอราคา
-                                    </button>
+                                    </a>
                                 </div>
 
                                 {/* Mobile Menu Button */}
@@ -394,12 +376,15 @@ ${details ? `📝 รายละเอียด: ${details}` : ''}
                                 <a href="#products" className="block px-4 py-2 font-bold hover:bg-slate-50" onClick={() => setIsMenuOpen(false)}>สินค้า</a>
                                 <a href="#franchise" className="block px-4 py-2 font-bold text-blue-600" onClick={() => setIsMenuOpen(false)}>แฟรนไชส์</a>
                                 <a href="#reviews" className="block px-4 py-2 font-bold" onClick={() => setIsMenuOpen(false)}>รีวิว</a>
-                                <button 
-                                    onClick={() => { setIsOrderModalOpen(true); setIsMenuOpen(false); }}
-                                    className="w-full px-4 py-2 bg-red-600 text-white rounded-lg text-center font-bold"
+                                <a 
+                                    href="https://lin.ee/Torcu70"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="w-full px-4 py-2 bg-red-600 text-white rounded-lg text-center font-bold block"
                                 >
                                     ติดต่อ/ขอใบเสนอราคา
-                                </button>
+                                </a>
                             </div>
                         )}
                     </nav>
@@ -417,7 +402,7 @@ ${details ? `📝 รายละเอียด: ${details}` : ''}
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-white">
                             <div className="max-w-3xl animate-in slide-in-from-left duration-700">
                                 <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-1.5 rounded-full text-sm font-bold mb-6">
-                                    <ShieldCheck className="w-4 h-4 text-green-400" /> โรงงานผลิตโดยตรง มาตรฐาน ISO 9001
+                                    <ShieldCheck className="w-4 h-4 text-green-400" /> โรงงานผลิตโดยตรง มาตรฐาน ISO 
                                 </div>
                                 <h2 className="text-yellow-400 font-bold text-lg mb-2 uppercase tracking-wider">รับผลิตกล่องบรรจุภัณฑ์ครบวงจร</h2>
                                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
@@ -431,12 +416,14 @@ ${details ? `📝 รายละเอียด: ${details}` : ''}
                                 </p>
                                 
                                 <div className="flex flex-col sm:flex-row gap-4">
-                                    <button 
-                                        onClick={() => setIsOrderModalOpen(true)}
+                                    <a 
+                                        href="https://lin.ee/Torcu70"
+                                        target="_blank"
+                                        rel="noreferrer"
                                         className="px-8 py-4 bg-green-500 hover:bg-green-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-lg shadow-xl shadow-green-900/30 group"
                                     >
                                         <FileText className="w-6 h-6" /> ขอราคาผลิตกล่อง
-                                    </button>
+                                    </a>
                                     <button onClick={() => window.location.href='#products'} className="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 rounded-xl font-bold transition-all flex items-center justify-center gap-2 group">
                                         ดูโปรโมชั่น 750.- <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform"/>
                                     </button>
@@ -677,7 +664,7 @@ ${details ? `📝 รายละเอียด: ${details}` : ''}
                                         <Box className="text-red-600 fill-current" /> 9TT PACKAGE
                                     </div>
                                     <p className="text-sm leading-relaxed text-slate-400">
-                                        บริษัท ไนน์ทีที แพคเกจ แอนด์ โปรดักส์ จำกัด <br/>
+                                        บริษัท 9ทีที แพคเกจ แอนด์ โปรดักส์ จำกัด <br/>
                                         ผู้เชี่ยวชาญด้านบรรจุภัณฑ์และไปรษณีย์ครบวงจร
                                     </p>
                                     <div className="flex gap-4 pt-2">
@@ -753,46 +740,6 @@ ${details ? `📝 รายละเอียด: ${details}` : ''}
                                         ยอมรับทั้งหมด
                                     </button>
                                 </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Order Modal */}
-                    {isOrderModalOpen && (
-                        <div className="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-                            <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-                                <div className="bg-red-600 p-6 flex justify-between items-center text-white">
-                                    <h3 className="text-xl font-bold flex items-center gap-2"><Edit3/> ขอใบเสนอราคา / สั่งซื้อ</h3>
-                                    <button onClick={() => setIsOrderModalOpen(false)} className="hover:bg-white/20 p-1 rounded-full"><X/></button>
-                                </div>
-                                
-                                {submitSuccess ? (
-                                    <div className="p-12 text-center">
-                                        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                            <Check size={40} className="text-green-600" />
-                                        </div>
-                                        <h4 className="text-2xl font-bold text-green-600 mb-2">ส่งข้อมูลสำเร็จ!</h4>
-                                        <p className="text-slate-500">เจ้าหน้าที่จะติดต่อกลับภายใน 15 นาทีครับ</p>
-                                    </div>
-                                ) : (
-                                    <form onSubmit={handleOrderSubmit} className="p-6 space-y-4">
-                                        <div>
-                                            <label className="block text-sm font-bold text-slate-700 mb-1">ชื่อ-นามสกุล / บริษัท</label>
-                                            <input required type="text" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none" placeholder="ระบุชื่อผู้ติดต่อ..." value={orderForm.name} onChange={e => setOrderForm({...orderForm, name: e.target.value})}/>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-bold text-slate-700 mb-1">เบอร์โทรศัพท์ติดต่อกลับ</label>
-                                            <input required type="tel" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none" placeholder="08x-xxx-xxxx" value={orderForm.phone} onChange={e => setOrderForm({...orderForm, phone: e.target.value})}/>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-bold text-slate-700 mb-1">รายละเอียดสินค้าที่สนใจ</label>
-                                            <textarea rows="3" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none" placeholder="เช่น กล่องฝาชน ขนาด C จำนวน 1000 ใบ..." value={orderForm.details} onChange={e => setOrderForm({...orderForm, details: e.target.value})}></textarea>
-                                        </div>
-                                        <button type="submit" disabled={isSubmitting} className="w-full py-4 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg flex justify-center items-center gap-2">
-                                            {isSubmitting ? <><div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div> กำลังส่งข้อมูล...</> : <><Send size={20}/> ยืนยันข้อมูล</>}
-                                        </button>
-                                    </form>
-                                )}
                             </div>
                         </div>
                     )}
