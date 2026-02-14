@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalog สินค้าด่วน - กล่องไปรษณีย์ชลบุรี อุปกรณ์แพ็คกิ้งราคาโรงงาน PA Packing</title>
+    <meta name="description"
+        content="แคตตาล็อกสินค้าอุปกรณ์แพ็คกิ้งครบวงจร กล่องไปรษณีย์ชลบุรี ซองกันกระแทก บับเบิ้ล เทปกาว สติกเกอร์พิมพ์ใบปะหน้า ราคาส่งโรงงาน ไม่มีขั้นต่ำ พร้อมส่งด่วนทั่วไทย">
+    <meta name="keywords"
+        content="กล่องไปรษณีย์ชลบุรี, ร้านขายกล่องพัสดุชลบุรี, ซองกันกระแทกชลบุรี, อุปกรณ์แพ็คกิ้งราคาส่ง, สติกเกอร์ใบปะหน้า, บับเบิ้ลส่งฟรี, PA Packing">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Catalog อุปกรณ์แพ็คกิ้งราคาส่ง - กล่องไปรษณีย์ชลบุรี">
+    <meta property="og:description" content="รวมสินค้าแพ็คกิ้งครบวงจร ราคาส่งตรงจากโรงงาน สั่งง่าย ส่งไว ได้ของชัวร์">
+    <meta property="og:image"
+        content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgSBaU4REBZYAuCwkaoKFdKW936T7yKrqGttBQIIAyvkYT0xpv1q_Z5amzTNM3tipjf7o1SZhH9PXiOY8jiqmrzeN52AQFEKOKxR-XO_HywodPVzQbY2zCpdtWcbZ28AHZEQDvQyWeUSw84OIxuELsxFQ3ZKBEFgdgDhcW7VnmngSSyk5HVWegkbTw2Z3A/s500/LOGO.png">
+    <meta property="og:type" content="website">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+        }
+
+        .product-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-btn.active {
+            background-color: #f97316;
+            color: white;
+            border-color: #f97316;
+        }
+
+        #lightbox-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #lightbox-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 85%;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        #lightbox-modal.active .lightbox-content {
+            transform: scale(1);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 pb-24">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgSBaU4REBZYAuCwkaoKFdKW936T7yKrqGttBQIIAyvkYT0xpv1q_Z5amzTNM3tipjf7o1SZhH9PXiOY8jiqmrzeN52AQFEKOKxR-XO_HywodPVzQbY2zCpdtWcbZ28AHZEQDvQyWeUSw84OIxuELsxFQ3ZKBEFgdgDhcW7VnmngSSyk5HVWegkbTw2Z3A/s500/LOGO.png"
+                    alt="PAPACKIN888 Logo" class="h-10 sm:h-12 w-auto">
+                <div>
+                    <h1 class="text-sm font-black text-slate-900 leading-none">PAPACKIN888</h1>
+                    <p class="text-[10px] text-orange-500 font-bold uppercase tracking-widest mt-0.5">Quick Catalog</p>
+                </div>
+            </div>
+
+            <a href="index.html"
+                class="flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-orange-500 transition px-4 py-2 rounded-full bg-slate-100">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>หน้าหลัก</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Header & Search Section -->
+    <header class="bg-white border-b border-gray-100 pt-8 pb-4">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <span class="w-2 h-8 bg-orange-500 rounded-full"></span>
+                สินค้าราคาโรงงาน อัปเดตล่าสุด
+            </h2>
+
+            <!-- Search & Filters -->
+            <div class="space-y-4">
+                <div class="relative">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                    <input type="text" id="product-search" placeholder="ค้นหาชื่อสินค้า เช่น กล่อง, ซอง, บับเบิ้ล..."
+                        class="w-full pl-12 pr-4 py-4 bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-orange-500 font-medium transition shadow-inner">
+                </div>
+                <div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                    <button onclick="filterCategory('all', this)"
+                        class="category-btn active whitespace-nowrap px-6 py-3 rounded-2xl border border-slate-200 font-bold text-sm transition">ทั้งหมด</button>
+                    <button onclick="filterCategory('box', this)"
+                        class="category-btn whitespace-nowrap px-6 py-3 rounded-2xl border border-slate-200 font-bold text-sm transition">กล่องพัสดุ</button>
+                    <button onclick="filterCategory('envelope', this)"
+                        class="category-btn whitespace-nowrap px-6 py-3 rounded-2xl border border-slate-200 font-bold text-sm transition">ซอง/กันกระแทก</button>
+                    <button onclick="filterCategory('accessory', this)"
+                        class="category-btn whitespace-nowrap px-6 py-3 rounded-2xl border border-slate-200 font-bold text-sm transition">อุปกรณ์แพ็ค</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Desktop Table View -->
+        <div
+            class="hidden lg:block bg-white rounded-[2.5rem] overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-32">
+                            รูปสินค้า</th>
+                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                            รายละเอียดสินค้า</th>
+                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-48">
+                            ราคาพิเศษ</th>
+                        <th
+                            class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-40 text-center">
+                            จัดการ</th>
+                    </tr>
+                </thead>
+                <tbody id="product-table-body" class="divide-y divide-slate-100">
+                    <!-- JS Injected Rows -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Grid View -->
+        <div id="product-grid" class="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- JS Injected Cards -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden py-32 text-center">
+            <div
+                class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
+                <i data-lucide="package-search" class="w-12 h-12"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900 mb-2">ไม่มีสินค้าที่ค้นหา</h3>
+            <p class="text-slate-500 font-medium">ลองเปลี่ยนคำค้นหา หรือเลือกหมวดหมู่อื่นดูนะครับ</p>
+        </div>
+    </main>
+
+    <!-- Mobile Sticky Contact Bar -->
+    <div
+        class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-100 p-4 z-50 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)]">
+        <div class="max-w-6xl mx-auto flex items-center gap-3">
+            <div class="hidden sm:block pr-6 border-r border-slate-100">
+                <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest leading-none mb-1">CALL CENTER
+                </p>
+                <p class="text-xl font-black text-slate-900">086-888-3656</p>
+            </div>
+            <a href="tel:0868883656"
+                class="flex-1 bg-slate-900 text-white py-4 rounded-3xl font-black text-sm flex items-center justify-center gap-3 shadow-xl active:scale-95 transition">
+                <i data-lucide="phone" class="w-5 h-5"></i> โทรเลย
+            </a>
+            <a href="https://lin.ee/Yr9sqDZ" target="_blank"
+                class="flex-1 bg-green-500 text-white py-4 rounded-3xl font-black text-sm flex items-center justify-center gap-3 shadow-xl active:scale-95 transition">
+                <i class="fa-brands fa-line text-2xl"></i> แชท Line
+            </a>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" onclick="closeLightbox()">
+        <button class="absolute top-6 right-6 text-white hover:text-orange-500 transition-colors z-[1001]">
+            <i data-lucide="x" class="w-10 h-10"></i>
+        </button>
+        <img id="lightbox-img" class="lightbox-content rounded-3xl shadow-2xl border-4 border-white/10" src="" alt="">
+    </div>
+
+    <!-- JS Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        const products = [
+            { id: 1, cat: "box", title: "กล่องพัสดุ ทุกไซส์", desc: "กล่องฝาชน กล่องไดคัท แข็งแรง เกรดคุณภาพส่งออก", price: "ราคาโรงงาน", tag: "Hot", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjaQww2SBCU0ZhTOS76lnzI8koCOLG52GaCKBqqDgA-J6rGynUClAhmMCi7k1kM2cK_sOJ5hUOFgXcyw5sdCGELMkssWdQKSsA6UO__yM4K4pzhoaZqEPHC_F3kMcS9zyfCumU7XtWoumc5ya0DLX7BJWgynSFa1dSANGuafXYZLjCtx_OXnvrkfHor25Xq/s16000/PAPACKIN888-scaled.jpg" },
+            { id: 2, cat: "accessory", title: "สติกเกอร์ Paperang Peripage", desc: "พิมพ์คมชัด กันน้ำ กันรอย รองรับทุกรุ่น", price: "พร้อมส่ง", tag: "ขายดี", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjJlrG2gUeqY3xboKt3dGc15OLQohP1IV1nK0Sw0pisg3K6cmYHmsEVb2YthhTKUBXQOqUgfGViI-09EzLpMaF2y_acqSpyrDSIrUqgORM128KL_B3-M-kqJFH22E63Mo30tbDq7gxGtpSk3SuSqmn2iFV_OzpahorMv3zE70suNPxPYnrWjz5T6AB8yLE/s16000/%E0%B8%AA%E0%B8%95%E0%B8%B4%E0%B8%81%E0%B9%80%E0%B8%81%E0%B8%AD%E0%B8%A3%E0%B9%8C%20Paperang%20Peripage%20%20%E0%B9%80%E0%B8%A7%E0%B9%89%E0%B8%99%E0%B8%82%E0%B8%AD%E0%B8%9A%20%E0%B8%81%E0%B8%B1%E0%B8%99%E0%B8%99%E0%B9%89%E0%B8%B3.png" },
+            { id: 3, cat: "accessory", title: "สติกเกอร์พิมพ์ใบปะหน้า", desc: "ติดแน่น กันน้ำ รองรับ Flash, J&T, Kerry", price: "ราคาส่ง", tag: "แนะนำ", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjI1kyQmvz7HRJylGq4ctmA9zUVIjdlPPITpfEr1WOevbPJCd7XAIuYIDtycYCEhoc9tQPYQOUCaeoLuiG9b8aWbHakqoc41F31sBUS73X3lH6WkgtQL8rYlNLFGIk_fRjpYH46Kso-SwobL5JQhGhozS0CTNvwnM_6CtIkJM2cgx_SeNhFV8TeveXETWo/s16000/%E0%B8%AA%E0%B8%95%E0%B8%B4%E0%B8%81%E0%B9%80%E0%B8%81%E0%B8%AD%E0%B8%A3%E0%B9%8C%20%20%E0%B8%9E%E0%B8%B4%E0%B8%A1%E0%B8%9E%E0%B9%8C%E0%B9%83%E0%B8%9A%E0%B8%9B%E0%B8%B0%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2.png" },
+            { id: 4, cat: "accessory", title: "กระดาษปริ้นใบเสร็จ (Thermal)", desc: "เนื้อขาวเนียน ถนอมหัวพิมพ์ ไม่ซีดจางง่าย", price: "พรีเมียม", tag: "คุณภาพ", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiW0cKiX2n9V5_XSivGwb8JBjLjJV3-BLEaEvTtDxOBYqnNuSm80ruFDjg4vklO6SXj7G2cB7tvPcpqYVOR3mZtB1Kt562k3wZNRbGiE-hi7kpl9rU_MTxeqnominGeLHGs-Pe3E9PcXwpqqP_xDtXsSNWzn4UayfekXAOzaga8XHjtpxfMXoSoV7rQxBQ/s16000/%E0%B8%81%E0%B8%A3%E0%B8%B2%E0%B8%94%E0%B8%B2%E0%B8%A9%E0%B8%9B%E0%B8%A3%E0%B8%B4%E0%B9%89%E0%B8%99%E0%B9%83%E0%B8%9A%E0%B9%80%E0%B8%AA%E0%B8%A3%E0%B9%87%20%20%E0%B8%81%E0%B8%A3%E0%B8%B2%E0%B8%94%E0%B8%B2%E0%B8%A9%E0%B8%A3%E0%B9%89%E0%B8%AD%E0%B8%99.png" },
+            { id: 5, cat: "accessory", title: "สติกเกอร์ COD", desc: "สีส้มเด่นชัด กาวเหนียว พนักงานไม่พลาดเก็บเงินแน่นอน", price: "ขายดี", tag: "ยอดนิยม", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgFRJlEVn-enFZ5RpWZgxx9NM9sVeoMMryeYc_a4GXChU4N8u70Qtun8ifLFNhX4iK0TprlH64sAiVNJydrDUaoCEZUUGT44n479P1jtnQkuPEGOAGy4mPPuBHm58l7BKQvFnSdO5IsFBSf6_WHWz8Jd2xeIM56xELAXfjcEWLHk0R2FVRS5aDb1gpFSmM/s16000/%E0%B8%AA%E0%B8%95%E0%B8%B4%E0%B8%81%E0%B9%80%E0%B8%81%E0%B8%AD%E0%B8%A3%E0%B9%8C%20COD.png" },
+            { id: 6, cat: "accessory", title: "อุปกรณ์เปิดร้านพัสดุ", desc: "ชุดเซ็ตเปิดร้าน อุปกรณ์ครบพร้อมเริ่มธุรกิจทันที", price: "เซ็ตสุดคุ้ม", tag: "เปิดร้าน", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjLDSX_7qIkhtuTq9y_EMNcFY8fyQeU274LGYLkmBpvwMOy5NS_N3BjcmVoH8lru6Dnc4aE0VU0nHKDE1qsibseIRF67ROS_HxSN0eJzIHgcPPNvvLVu9-h4lYe9oad6dVP-Zp3cYCLL1Lh-Qm44f5-YKM6p27X9fGB1T7iUGVNn3iJ_4XK-VoWMllK1gk/s16000/%E0%B8%AD%E0%B8%B8%E0%B8%9B%E0%B8%81%E0%B8%A3%E0%B8%93%E0%B9%80%E0%B8%9B%E0%B8%B4%E0%B8%94%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%A3%E0%B8%B1%E0%B8%9B-%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B8%9E%E0%B8%B1%E0%B8%AA%E0%B8%94%E0%B8%B8.png" },
+            { id: 7, cat: "accessory", title: "ฟิล์มยืดพันพาเลท", desc: "เหนียว ยืดหยุ่นสูง ป้องกันฝุ่นและความชื้น", price: "ครบวงจร", tag: "ราคาโรงงาน", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg6jVm1dOeURqA0g8qTFrzJllshH0ThCYD-lNjdiCL8xssJjUCs_L3u8gUaj9xB44-PXp9ILX6jlLN8xdEwLUmozA99N6pfjDpnLz5R4X9i3GqVcyOXaqEA_28K_Vpd3NyWIXiWsMP0FSHPpNTSCyYkxYD6GnvMd_yu8JIgAGJrCEyHLlty20A5owQOVF0/s16000/%E0%B8%9F%E0%B8%B4%E0%B8%A5%E0%B9%8C%E0%B8%A1%E0%B8%A2%E0%B8%B7%E0%B8%94%E0%B8%9E%E0%B8%B1%E0%B8%99%E0%B8%9E%E0%B8%B2%E0%B9%80%E0%B8%A5%E0%B8%97.png" },
+            { id: 8, cat: "accessory", title: "ที่ตัดเทป OPP", desc: "เหล็กหนาทนทาน ฟันตัดคม แพ็คของได้ไวขึ้น", price: "เกรด A", tag: "ทนทาน", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEixoO1v8BTazfIm7l4qFKQ8FUkqKvnWBLfQn3Z6TK2CRRvwXLEO_NaEzY8EuUXeqMkrx4q8VzDmYzoxgIg6hOLIILYVMFDZ-eu9SrLUXJYXsC_Fr34_dT0Sr74VJWdfCtQ_b1_oV5iMuNjivsBRH6ltjpQ3PwDrQb3S7ms87f-xW9JiR-GyUsjrbyPa4kw/s16000/%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%95%E0%B8%B1%E0%B8%94%E0%B9%80%E0%B8%97%E0%B8%9B%20OPP.png" },
+            { id: 9, cat: "envelope", title: "แอร์บับเบิ้ล (10 แถม 1)", desc: "โปรสุดคุ้ม! 10 ม้วน แถมฟรี 1 ม้วน + ส่งฟรีทั่วไทย", price: "ส่งฟรี", tag: "Promotion", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjHUZzxTKeR6o-TaQ-fDAS8cRu9vYqCkxrzbCjt2vTwoxDAvrsRFOOtXUkNeL8LH7XL5rYI6AB4vkeletaOmvFieoPm7_O6ozxTVJfSK0dmG-thjy4-vm_m1hIvPGFXbgiHwpXHYITN4S6bwmHDSJDRDajFX1gc-kfPyz2AwGJWjOCgI1rEq0B-IvycK3bb/s16000-rw/%E0%B9%81%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%9A%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%9A%E0%B8%B4%E0%B8%A5.jpg" },
+            { id: 10, cat: "envelope", title: "ซองกันกระแทกพลาสติก", desc: "เนื้อบับเบิ้ลทั้งใบ กันน้ำ ทึบ 100% มีแถบกาว", price: "เริ่ม 3.-", tag: "Hot Item", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhlCPiSEibbd2pEOeM0zkcB-4WC29kHuQiRKZflDuNce1w8H5YRxhNKr_XL1TzVYXgDnwhDiqB8aWAzbIkyZJbQWCvEDfsU6KjAJC3LMEm8hJ5bPmJYSaTyym76XuJXZre1D3jtgaU-JuzoTYMlVPeYHX0aCVRSAdK1gXIMbj66KjXfnRtgLfKtDjZ6YNo/s568/2025-11-26_21-27-03.png" },
+            { id: 11, cat: "envelope", title: "ซองบับเบิ้ลกันกระแทก", desc: "ซองพลาสติกกันกระแทกอย่างดี น้ำหนักเบา ประหยัดค่าส่ง", price: "ราคาพิเศษ", tag: "แนะนำ", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjJ_g2vsCKySm838cZEI5EsyQaVkIh6HbNrlqKm77BQw5DvYTs3U3Z99TKuhU-09JyYjwuq1oI6xwcDB01L77vMHKZ-qb23v_gRlhvfnd8NAheWgB7RrCmzfSAiwqA_EelufRUFnvAUid6FGjgKSk_SaFwV0ijFnA02k4bYPxxsPDaHHphv-y6t8lZmbrw/s1097/2025-11-26_21-27-25.png" },
+            { id: 12, cat: "envelope", title: "ซองไปรษณีย์ประหยัด", desc: "สีเทา/ดำ เหนียวแน่น ทนทาน ราคาถูกที่สุด", price: "ราคาส่ง", tag: "ประหยัด", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgys8opgGQB-1LF8x5NUBgXxK8dUvYX7vGMOWJeBhp5TuMJhCYGYwARABH3P8974OG0j-6h31F61x7NssS5iYrucKr_NB5TOF5HTzYdtKEdtBFtIsPAROHiJ7WYOApI54D6XQfxREdLBNsjL2IXvI0MTvHJ996rGns0ANkh7frACDcSnfPIeksCoYw7s4o/s736/%E0%B8%8B%E0%B9%8B%E0%B8%87%E0%B9%84%E0%B8%9B%E0%B8%A3%E0%B8%A9%E0%B8%93%E0%B8%B5%E0%B8%A2%E0%B9%8C%E0%B8%9E%E0%B8%A5%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%B4%E0%B8%81%20%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%98%E0%B9%88%E0%B8%B2%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%20%E0%B8%AA%E0%B8%B5%E0%B9%80%E0%B8%19%E0%B8%B2%20%E0%B9%81%E0%B8%A5%E0%B8%B5%E0%B8%AA%E0%B8%B5%E0%B8%94%E0%B8%B3%20%E0%B9%80%E0%B8%81%E0%B8%A3%E0%B8%94%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AB%E0%B8%A2%E0%B8%B1%E0%B8%94.png" },
+            { id: 13, cat: "envelope", title: "ซองพลาสติกสีขาว A+", desc: "เนื้อพรีเมียม ขาวเนียน หนา แข็งแรง เพิ่มมูลค่าสินค้า", price: "พรีเมียม", tag: "A+", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEix04J1eucAyte00QCuCvMp7CkQnSUc15qE-oVDCj78X0wbcdRzCWvBNddrfje1lfwKdiEJFkej5aILB6dK-f71jjTmlY8RveW8s2U-odP3Pq46wC9vkHbzi_HsAaVQFpbUvd0PmnJtwnZyuCpggzwASKRYgoCLSi8E-7vZReMzT_7u2gdIAyCm16xjUtc/s905/%E0%B8%8B%E0%B8%AD%E0%B8%87%E0%B8%9E%E0%B8%A5%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%B4%E0%B8%81%AA%E0%B8%B5%E0%B8%82%E0%B8%B2%E0%B8%A7%20%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%88%E0%B9%88%E0%B8%B2%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%20A+.png" },
+            { id: 14, cat: "envelope", title: "ซองพลาสติกสีพาสเทล", desc: "สีสันสดใส น่ารัก สร้างความประทับใจเมื่อลูกค้าได้รับ", price: "ยอดฮิต", tag: "Colorful", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhK6Mgt86cHjzhJasCUoYzSbrS4djJkru2PDW2xcPYvG-o6CG6vLw2XcbQgFv1P5poV0JBBGporzC7yFVwsAUuCzhNmWWrLrNm7m1zB5N_HDmpAcnQBvXistUp0U5olvworgcVJ4sapFKlmxwYW0BCbuIRJyjFQJNvt0e6IjRRUwDv4qJxNwX56YsqmgY0/s1029/%E0%B8%8B%E0%B8%AD%E0%B8%87%E0%B8%9E%E0%B8%A5%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%B4%E0%B8%81%AA%E0%B8%B5%E0%B8%9E%E0%B8%B2%E0%B8%AA%E0%B9%80%E0%B8%A7%E0%B8%A5.png" },
+            { id: 15, cat: "accessory", title: "ถุงแก้วใส OPP ฝากาว", desc: "ถุงใส่เสื้อผ้า ใสปิ๊ง เพิ่มความว้าว ยกกิโลราคาถูก!", price: "170.-/กม.", tag: "Hot", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhiLqvFO676RXIjfiargK3VSJcklnSSHF0GV91IbMt2NY6tW5b89n83ChA91XeDODPxv9NwJmKQA7Dt0RTJvu4z2cALrrOYja0AMHCGZns0IBK3R4TaDmy9NKu2wpYDAAHh2ssuYd6yu4nnN0VOnmQOQsEOXeJRRF42JOdeX8UuGRGelaz3ichsa2t6d6U/s754/%E0%B8%96%E0%B8%B8%E0%B8%87%E0%B9%83%E0%B8%AA%20OPP%20%E0%B8%9D%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A7%20%20%E0%B8%96%E0%B8%B8%E0%B8%87%E0%B9%83%E0%B8%AA%E0%B9%88%E0%B8%A0%E0%B8%AA%E0%B8%B7%E0%B9%89%E0%B8%AD%E0%B8%9C%E0%B9%89%E0%B8%B2%20%E0%B8%A2%E0%B8%81%E0%B9%82%E0%B8%A5%20%20170%20%E0%B8%9A%E0%B8%B2%E0%B8%97%205%20%E0%B9%82%E0%B8%A5%E0%B8%AA%E0%B8%98%E0%B8%A3%E0%B8%B5.png" },
+            { id: 16, cat: "envelope", title: "ซองกระดาษน้ำตาล กาวน้ำ", desc: "เนื้อกระดาษหนา แข็งแรง กาวเหนียว สำหรับใส่เอกสาร", price: "ราคาส่ง", tag: "Classic", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi-U2Wa0XiSJABJLsh9iTTfzhnifU-rzQxI0AKBkmdh2DmMIoF7M07w4tG7CTQgFWFmavm-6Trg9POgdBIjG2XLccEErIFnCnFRpDkW-XH34t5AzWH3oQH79ECBbN1yrfgKx_TVRrwbMGHua-9sc2pJS-JjMQl8QlXA6cqIoY82Ei6EM2q74ah209_Vb-M/s16000/%E0%B8%8B%E0%B8%AD%E0%B8%87%E0%B8%19%E0%B8%A3%E0%B8%B0%E0%B8%94%E0%B8%B2%E0%B8%A9%E0%B8%99%E0%B9%89%E0%B8%B3%E0%B8%95%E0%B8%B2%E0%B8%A5%E0%B8%81%E0%B8%B2%E0%B8%A7%E0%B8%99%E0%B9%89%E0%B8%B3%20%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%9E%E0%B8%B4%E0%B8%A1%E0%B8%9E%E0%B9%8C.png" },
+            { id: 17, cat: "envelope", title: "ซองน้ำตาล ซิลิโคน (พิมพ์)", desc: "มีแถบกาวในตัว ใช้งานสะดวก แพ็ค 50 ซองสุดคุ้ม", price: "ราคาโรงงาน", tag: "Recommended", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEinoL2L4TB_KTHMZE4vpw30BZPh8FByY709OuxNWRdOAIIpNMCKMxdHH8ItNPjGI3pQGx9wXhvMXPs0K5qvqR0Q02gZn_6o1rvsaD6vwPEnX8wHO_ZhnFict5qvaGEAhbFnYM2U8NaiHg8c2NWEyBXIRJ-7XjYatBXBTpRvONVKAUth8cJzLxZHbySh4f4/s16000/%E0%B8%8B%E0%B8%AD%E0%B8%87%E0%B8%81%E0%B8%A3%E0%B8%B2%E0%B8%94%E0%B8%B2%E0%B8%A9%E0%B8%99%E0%B9%89%E0%B8%B3%E0%B8%95%E0%B8%B2%E0%B8%A5%E0%B8%8B%E0%B8%B4%E0%B8%A5%E0%B8%B4%E0%B9%82%E0%B8%84%E0%B8%99%20%E0%B8%9E%E0%B8%B4%E0%B8%A1%E0%B8%9E%E0%B9%8C%2050%20%E0%B8%8B%E0%B8%AD%E0%B8%87%E0%B9%81%E0%B8%9E%E0%B9%87%E0%B8%84.png" },
+            { id: 18, cat: "accessory", title: "เทประวังแตก (Fragile Tape)", desc: "สีเด่นสะดุดตา กาวเหนียวพิเศษ ไม่หลุดลอกง่าย", price: "ขายดีมาก", tag: "Must Have", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhabqpMRw1fRRo_bkz6Roq9Wd8lENNGjJkjzwTTMDdllsNaD6s04ANufRzo1pNh8dkebmdvt2MEvrhjLP4yQ4K39YyoYEYiPJbvyFx3RE7xkh06l9lheckdgNqLxrvAj4bTQGJ3GhO4scoDthzs4l5qFQYA3w8-MIUC9VXTUdat8d8Dnv67gcRe0cyOIT4/s16000/%E0%B9%81%E0%B8%97%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A7%E0%B8%B1%E0%B8%87%E0%B9%81%E0%B8%95%E0%B8%81.png" },
+        ];
+
+        let currentCategory = 'all';
+
+        function renderProducts() {
+            const search = document.getElementById('product-search').value.toLowerCase();
+            const tableBody = document.getElementById('product-table-body');
+            const grid = document.getElementById('product-grid');
+            const emptyState = document.getElementById('empty-state');
+
+            const filtered = products.filter(p =>
+                (currentCategory === 'all' || p.cat === currentCategory) &&
+                (p.title.toLowerCase().includes(search) || p.desc.toLowerCase().includes(search))
+            );
+
+            tableBody.innerHTML = '';
+            grid.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                filtered.forEach(p => {
+                    // Desktop Row
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-50 transition duration-300";
+                    tr.innerHTML = `
+                        <td class="px-8 py-4">
+                            <img src="${p.img}" alt="${p.title}" class="w-20 h-20 object-cover rounded-2xl cursor-zoom-in border border-slate-100 shadow-sm" onclick="openLightbox('${p.img}')">
+                        </td>
+                        <td class="px-8 py-4">
+                            <span class="text-[9px] bg-slate-100 px-2 py-0.5 rounded text-slate-500 font-black uppercase mb-1 inline-block">${p.cat}</span>
+                            <h4 class="text-base font-black text-slate-900 leading-tight">${p.title}</h4>
+                            <p class="text-xs text-slate-500 mt-1">${p.desc}</p>
+                        </td>
+                        <td class="px-8 py-4">
+                            <div class="text-orange-600 font-black text-xl">${p.price}</div>
+                            <span class="text-[10px] text-green-600 font-bold flex items-center gap-1 mt-1"><i class="fas fa-check-circle"></i> พร้อมส่งทันที</span>
+                        </td>
+                        <td class="px-8 py-4 text-center">
+                            <a href="https://lin.ee/Yr9sqDZ?text=สนใจสินค้า: ${p.title}" target="_blank" class="inline-flex flex-col items-center gap-1 group">
+                                <div class="w-12 h-12 bg-orange-500 text-white rounded-2xl flex items-center justify-center group-hover:scale-110 active:scale-90 transition shadow-lg shadow-orange-500/30">
+                                    <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                                </div>
+                                <span class="text-[10px] font-black text-slate-400">สั่งซื้อ</span>
+                            </a>
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+
+                    // Mobile Card
+                    const card = document.createElement('div');
+                    card.className = "bg-white p-5 rounded-[2.5rem] border border-slate-100 product-card flex flex-col";
+                    card.innerHTML = `
+                        <div class="relative mb-4">
+                            <img src="${p.img}" alt="${p.title}" class="w-full h-56 object-cover rounded-[2rem] shadow-md" onclick="openLightbox('${p.img}')">
+                            <span class="absolute top-4 right-4 bg-slate-900 text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-xl">${p.tag}</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-black text-slate-900 mb-1 leading-tight">${p.title}</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed mb-6">${p.desc}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-slate-50">
+                            <div>
+                                <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-0.5">ราคาโรงงาน</p>
+                                <p class="text-xl font-black text-orange-600">${p.price}</p>
+                            </div>
+                            <a href="https://lin.ee/Yr9sqDZ?text=สนใจสินค้า: ${p.title}" target="_blank" class="bg-slate-900 text-white px-6 py-3.5 rounded-[1.5rem] font-black text-xs shadow-xl active:scale-95 transition">สั่งซื้อด่วน</a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+            lucide.createIcons();
+        }
+
+        function filterCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderProducts();
+        }
+
+        document.getElementById('product-search').addEventListener('input', renderProducts);
+
+        const modal = document.getElementById('lightbox-modal');
+        const modalImg = document.getElementById('lightbox-img');
+
+        function openLightbox(src) {
+            modalImg.src = src;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        function closeLightbox() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        lucide.createIcons();
+        renderProducts();
+    </script>
+</body>
+
+</html>
