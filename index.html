@@ -1,11 +1,863 @@
- <!DOCTYPE html>
-<html>
-<head>
-    <title>DHL Paypoint</title>
-    <meta charset="UTF-8">
-</head>
-<body>
-    <h1>ยินดีต้อนรับสู่ DHL Paypoint</h1>
-    <p>เว็บไซต์กำลังพัฒนา</p>
-</body>
-</html>
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Package, 
+  CheckCircle, 
+  Truck, 
+  Edit3, 
+  Phone, 
+  MapPin, 
+  ChevronRight, 
+  ChevronDown,
+  Box, 
+  Menu,
+  X,
+  ArrowRight,
+  ShieldCheck,
+  MessageCircle,
+  FileText,
+  HelpCircle,
+  Building,
+  Facebook,
+  Cookie,
+  Bot,
+  Sparkles,
+  Send,
+  Zap,
+  Star,
+  Quote,
+  ThumbsUp,
+  Users,
+  XCircle,
+  Check,
+  RefreshCw
+} from 'lucide-react';
+
+const App = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeFaq, setActiveFaq] = useState(null);
+  const [showPDPA, setShowPDPA] = useState(false);
+  
+  // Chat State
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState("");
+  // Load chat history from local storage or start fresh
+  const [chatMessages, setChatMessages] = useState(() => {
+    const saved = localStorage.getItem('chat_history');
+    return saved ? JSON.parse(saved) : [
+      { type: 'bot', text: 'สวัสดีครับ! 🙏 ผมคือ AI ผู้ช่วยจาก 9TT Package' },
+      { type: 'bot', text: 'วันนี้สนใจ "โปรส่งฟรี 750.-" หรือต้องการ "เช็คราคาผลิตกล่อง" ดีครับ?' }
+    ];
+  });
+  
+  // Chat Flow State (To make it real)
+  const [chatStage, setChatStage] = useState('idle'); // idle, asking_name, asking_phone, asking_details, summary
+  const [leadData, setLeadData] = useState({ name: '', phone: '', interest: '' });
+  const [isTyping, setIsTyping] = useState(false);
+  const chatEndRef = useRef(null);
+
+  // Modal State
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [orderForm, setOrderForm] = useState({ name: '', phone: '', details: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  // SEO Optimization & PDPA Check
+  useEffect(() => {
+    document.title = "โรงงานผลิตกล่อง 9TT Package | กล่องไปรษณีย์ส่งฟรี แฟรนไชส์คืนทุนไว";
+    
+    // Simulate PDPA check
+    const isAccepted = localStorage.getItem('pdpa_accepted');
+    if (!isAccepted) {
+      setTimeout(() => setShowPDPA(true), 1500);
+    }
+  }, []);
+
+  // Auto-scroll chat & Save history
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    localStorage.setItem('chat_history', JSON.stringify(chatMessages));
+  }, [chatMessages, isTyping]);
+
+  const handleAcceptPDPA = () => {
+    localStorage.setItem('pdpa_accepted', 'true');
+    setShowPDPA(false);
+  };
+
+  const clearChat = () => {
+    localStorage.removeItem('chat_history');
+    setChatMessages([
+      { type: 'bot', text: 'สวัสดีครับ! 🙏 ผมคือ AI ผู้ช่วยจาก 9TT Package' },
+      { type: 'bot', text: 'เริ่มสนทนาใหม่นะครับ วันนี้สนใจด้านไหนดีครับ?' }
+    ]);
+    setChatStage('idle');
+    setLeadData({ name: '', phone: '', interest: '' });
+  };
+
+  // REAL LOGIC: Smart Flow
+  const processBotResponse = (text) => {
+    let botResponse = "";
+    let nextStage = chatStage;
+    let newLeadData = { ...leadData };
+    const lowerText = text.toLowerCase();
+
+    // Stage Handling
+    if (chatStage === 'idle') {
+      if (lowerText.includes("750") || lowerText.includes("โปร")) {
+        newLeadData.interest = "โปรโมชั่น 750 บาท";
+        botResponse = "📦 เยี่ยมเลยครับ! โปร 750 บาท คุ้มค่ามากครับ \nเพื่อยืนยันสิทธิ์ รบกวนขอทราบ **ชื่อคุณลูกค้า** หน่อยครับ?";
+        nextStage = 'asking_name';
+      } else if (lowerText.includes("ราคา") || lowerText.includes("ผลิต") || lowerText.includes("สั่ง")) {
+        newLeadData.interest = "สอบถามราคาผลิต";
+        botResponse = "💰 ยินดีดูแลเรื่องราคาให้ครับ รบกวนขอทราบ **ชื่อคุณลูกค้า** เพื่อให้เจ้าหน้าที่ดูแลต่อนะครับ?";
+        nextStage = 'asking_name';
+      } else if (lowerText.includes("แฟรนไชส์")) {
+        newLeadData.interest = "สนใจแฟรนไชส์";
+        botResponse = "🏢 สนใจธุรกิจแฟรนไชส์นะครับ รบกวนขอทราบ **ชื่อคุณลูกค้า** หน่อยครับ?";
+        nextStage = 'asking_name';
+      } else {
+        botResponse = "รับทราบครับ รบกวนขอทราบ **ชื่อเล่น** ของคุณลูกค้าก่อนนะครับ เดี๋ยวผมรีบประสานงานให้ครับ";
+        nextStage = 'asking_name';
+      }
+    } 
+    else if (chatStage === 'asking_name') {
+      newLeadData.name = text;
+      botResponse = `ยินดีที่ได้รู้จักครับคุณ ${text} 😊 \nรบกวนขอ **เบอร์โทรศัพท์** หรือ **ID LINE** สำหรับติดต่อกลับด้วยครับ?`;
+      nextStage = 'asking_phone';
+    }
+    else if (chatStage === 'asking_phone') {
+      newLeadData.phone = text;
+      botResponse = "ขอบคุณครับ! \nมีรายละเอียดอื่นๆ เพิ่มเติมไหมครับ? (เช่น ขนาดกล่องที่ต้องการ, จำนวน, หรือพิมพ์ 'ไม่มี' หากต้องการให้เจ้าหน้าที่ติดต่อเลย)";
+      nextStage = 'asking_details';
+    }
+    else if (chatStage === 'asking_details') {
+      const details = text.includes("ไม่มี") ? "" : text;
+      const finalMessage = `
+สรุปข้อมูลนะครับ 👇
+👤 ชื่อ: ${newLeadData.name}
+📞 ติดต่อ: ${newLeadData.phone}
+📌 สนใจ: ${newLeadData.interest}
+${details ? `📝 รายละเอียด: ${details}` : ''}
+
+ถูกต้องนะครับ? กดปุ่มด้านล่างเพื่อส่งข้อมูลเข้า LINE ครูโอ๋ ได้เลยครับ!
+      `;
+      botResponse = finalMessage;
+      nextStage = 'summary';
+    }
+
+    setLeadData(newLeadData);
+    setChatStage(nextStage);
+    return botResponse;
+  };
+
+  const handleSendMessage = (text) => {
+    if (!text.trim()) return;
+    
+    setChatMessages(prev => [...prev, { type: 'user', text }]);
+    setChatInput("");
+    setIsTyping(true);
+
+    // Simulate AI thinking time
+    setTimeout(() => {
+      const responseText = processBotResponse(text);
+      setChatMessages(prev => [...prev, { type: 'bot', text: responseText }]);
+      setIsTyping(false);
+    }, 800);
+  };
+
+  // Generate Real LINE Link
+  const getLineLink = () => {
+    const message = `สวัสดีครับ สนใจ ${leadData.interest || 'สินค้า'} ครับ\nชื่อ: ${leadData.name}\nเบอร์: ${leadData.phone}\nติดต่อมาจากหน้าเว็บครับ`;
+    return `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
+  };
+
+  const handleQuickReply = (text) => {
+    handleSendMessage(text);
+  };
+
+  // Order Form Logic
+  const handleOrderSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate API Call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setSubmitSuccess(true);
+      setOrderForm({ name: '', phone: '', details: '' });
+      
+      // Auto close after success
+      setTimeout(() => {
+        setSubmitSuccess(false);
+        setIsOrderModalOpen(false);
+      }, 3000);
+    }, 1500);
+  };
+
+  // Reviews Data (Same as before)
+  const reviews = [
+    {
+      id: 1,
+      name: "คุณมายด์",
+      role: "เจ้าของแบรนด์สบู่สมุนไพร",
+      text: "สั่งผลิตกล่องพิมพ์โลโก้กับ 9TT งานเนี๊ยบมากค่ะ กระดาษแข็งแรง ไม่ยุบง่าย ลูกค้าได้รับของแล้วชมแพ็คเกจจิ้งทุกคน ช่วยอัพเกรดสินค้าเราได้เยอะเลย แนะนำต่อแน่นอนค่ะ",
+      stars: 5,
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150"
+    },
+    {
+      id: 2,
+      name: "คุณเอก",
+      role: "ร้านขายอุปกรณ์ IT ออนไลน์",
+      text: "ประทับใจความไวครับ สั่งของด่วนไปก็ได้ตามนัด ราคาดีกว่าที่อื่นที่เคยสั่งมา แอดมินตอบไว ให้คำแนะนำเรื่องขนาดกล่องดีมากครับ ช่วยลดต้นทุนค่าส่งได้จริง",
+      stars: 5,
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
+    },
+    {
+      id: 3,
+      name: "พี่อ้อย",
+      role: "แฟรนไชส์ไปรษณีย์ สาขาสระบุรี",
+      text: "ตัดสินใจไม่ผิดที่ลงทุนแฟรนไชส์กับครูโอ๋ ระบบใช้ง่าย มีทีมซัพพอร์ตตลอด คืนทุนไวกว่าที่คิด ตอนนี้มีลูกค้าประจำเยอะมากค่ะ ใครมองหาอาชีพเสริมแนะนำเลย",
+      stars: 5,
+      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150"
+    }
+  ];
+
+  const articles = [
+    {
+      id: 1,
+      title: "เทคนิคเลือกเกรดกระดาษลูกฟูก (3ชั้น/5ชั้น) ให้ประหยัดต้นทุน",
+      excerpt: "เจาะลึกสเปคกระดาษ KA, KI, TS ต่างกันอย่างไร? เลือกแบบไหนให้เหมาะกับสินค้าของคุณ เพื่อลดต้นทุนการขนส่ง...",
+      date: "14 ก.พ. 2024",
+      image: "http://googleusercontent.com/image_generation_content/0"
+    },
+    {
+      id: 2,
+      title: "กล่องฝาชน vs ฝาเกลียว แบบไหนคุ้มค่ากว่ากัน?",
+      excerpt: "เปรียบเทียบข้อดี-ข้อเสีย รูปแบบกล่องยอดนิยมสำหรับ SME พ่อค้าแม่ค้าออนไลน์ต้องรู้ก่อนสั่งผลิต...",
+      date: "10 ก.พ. 2024",
+      image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=400"
+    },
+    {
+      id: 3,
+      title: "วิธีคำนวณขนาดกล่องเพื่อลดค่าขนส่ง Kerry/Flash",
+      excerpt: "Size กล่องมีผลต่อกำไร! สอนวิธีวัดขนาดสินค้าและการเผื่อระยะเพื่อไม่ให้โดนคิดค่าส่ง Over Size...",
+      date: "05 ก.พ. 2024",
+      image: "https://images.unsplash.com/photo-1566576912902-1d619946487c?auto=format&fit=crop&q=80&w=400"
+    }
+  ];
+
+  const faqs = [
+    {
+      q: "รับผลิตกล่องแบรนด์ตัวเอง ขั้นต่ำเท่าไหร่?",
+      a: "เราเชี่ยวชาญงาน OEM รับผลิตกล่องพิมพ์โลโก้แบรนด์ เริ่มต้นเพียง 500 ใบ (ขึ้นอยู่กับขนาด) ฟรีค่าบล็อกเมื่อสั่งจำนวนมาก"
+    },
+    {
+      q: "โปรโมชั่น 750 บาท ได้อะไรบ้าง?",
+      a: "ชุดเซ็ตเริ่มต้นแม่ค้าออนไลน์ ประกอบด้วยกล่องไซส์ยอดนิยม (00, 0, A, B) รวม 50-100 ใบ พร้อมเทปกาวและบับเบิ้ล ส่งฟรีทั่วประเทศครับ"
+    },
+    {
+      q: "โรงงานอยู่ที่ไหน มีหน้าร้านไหม?",
+      a: "โรงงานตั้งอยู่ที่ อ.เมือง จ.สระบุรี ลูกค้าสามารถเข้ามารับสินค้าเองได้ หรือให้เราจัดส่งขนส่งเอกชนได้ทั่วประเทศครับ"
+    },
+    {
+      q: "บริการแฟรนไชส์ไปรษณีย์ คืนทุนไวไหม?",
+      a: "แฟรนไชส์ของเราเน้นความยั่งยืน คืนทุนเฉลี่ยใน 3-6 เดือน ขึ้นอยู่กับทำเล เรามีทีมสอนการตลาดและการจัดการร้านให้ฟรีตลอดอายุสัญญาครับ"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-white font-sans text-slate-900 scroll-smooth relative">
+      
+      {/* Top Banner Promo */}
+      <div className="bg-gradient-to-r from-red-600 via-red-500 to-red-600 text-white py-2 px-4 text-center relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-white/10 skew-x-12 animate-pulse"></div>
+        <div className="relative z-10 flex justify-center items-center gap-2 text-sm md:text-base font-bold tracking-wide">
+          <Zap className="text-yellow-300 w-5 h-5 fill-current animate-bounce" />
+          <span>โปรแรงประจำเดือน! ชุดเริ่มต้นขายออนไลน์ เพียง 750.- ส่งฟรีทั่วไทย</span>
+          <button 
+            onClick={() => setIsChatOpen(true)}
+            className="bg-white text-red-600 text-xs px-3 py-1 rounded-full ml-2 hidden sm:inline-block hover:bg-yellow-100 transition-colors cursor-pointer"
+          >
+            ทักแชทสั่งเลย
+          </button>
+        </div>
+      </div>
+
+      {/* Top Bar Contact */}
+      <div className="bg-slate-900 text-slate-300 py-1.5 px-4 hidden md:block border-b border-slate-800">
+        <div className="max-w-7xl mx-auto flex justify-between items-center text-xs">
+          <div className="flex gap-4">
+            <span className="flex items-center gap-1"><Phone size={12} className="text-yellow-400"/> 086-888-3656 (ครูโอ๋)</span>
+            <span className="flex items-center gap-1"><MapPin size={12} className="text-yellow-400"/> โรงงานสระบุรี (ส่งทั่วไทย)</span>
+          </div>
+          <div className="flex gap-4">
+            <span className="flex items-center gap-1"><ShieldCheck size={12} className="text-green-400"/> ISO 9001:2015 Verified</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-40 transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-20 items-center">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
+              <img 
+                src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEidnfJfggGKPHkpDVlcJNGxw3mnZKwmg8FseZzggiiqAQVd8eK6t2smQPn_UGmqHckKBbFdLpDReBqnsdzHeZOs0KcEy6xNOOIIbW3CTkhnR6LUFRCPXc4UcgFR0tP46JV7-8BAtyTkuxFsKjz3Tcvy6C0JhxSZ7_k3O7pSk6ZJ1Urmazeb4EzaLflFM1I/s16000-rw/logo.jpg" 
+                alt="9TT Package Logo" 
+                className="h-14 w-auto object-contain hover:scale-105 transition-transform"
+              />
+              <div className="hidden sm:block leading-tight">
+                <h1 className="text-xl font-black text-slate-800 block m-0">9TT PACKAGE</h1>
+                <span className="text-[10px] font-bold text-red-600 tracking-wider uppercase">Factory & Franchise</span>
+              </div>
+            </div>
+            
+            {/* Desktop Menu */}
+            <div className="hidden lg:flex items-center space-x-6 font-bold text-slate-600 text-sm uppercase tracking-wide">
+              <a href="#home" className="hover:text-red-600 transition-colors">หน้าแรก</a>
+              <a href="#products" className="hover:text-red-600 transition-colors">สินค้าและราคา</a>
+              <a href="#franchise" className="hover:text-red-600 transition-colors">แฟรนไชส์ไปรษณีย์</a>
+              <a href="#reviews" className="hover:text-red-600 transition-colors">รีวิวลูกค้า</a>
+              <a href="#blog" className="hover:text-red-600 transition-colors">บทความ</a>
+              <button 
+                onClick={() => setIsOrderModalOpen(true)}
+                className="bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition-all shadow-md shadow-red-200 flex items-center gap-2"
+              >
+                <FileText size={16} /> ขอใบเสนอราคา
+              </button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button className="lg:hidden p-2 text-slate-600" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu Dropdown */}
+        {isMenuOpen && (
+          <div className="lg:hidden bg-white border-t p-4 space-y-4 shadow-xl absolute w-full z-50">
+            <a href="#home" className="block px-4 py-2 font-bold hover:bg-slate-50" onClick={() => setIsMenuOpen(false)}>หน้าแรก</a>
+            <a href="#products" className="block px-4 py-2 font-bold hover:bg-slate-50" onClick={() => setIsMenuOpen(false)}>สินค้า</a>
+            <a href="#franchise" className="block px-4 py-2 font-bold text-blue-600" onClick={() => setIsMenuOpen(false)}>แฟรนไชส์</a>
+            <a href="#reviews" className="block px-4 py-2 font-bold" onClick={() => setIsMenuOpen(false)}>รีวิว</a>
+            <button 
+              onClick={() => { setIsOrderModalOpen(true); setIsMenuOpen(false); }}
+              className="w-full px-4 py-2 bg-red-600 text-white rounded-lg text-center font-bold"
+            >
+              ติดต่อ/ขอใบเสนอราคา
+            </button>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero Section */}
+      <header id="home" className="relative py-24 md:py-32 overflow-hidden bg-slate-900">
+        <div className="absolute inset-0 opacity-40">
+          <img 
+            src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMTHJ_shLbGdOPpDDFdxTAODvN9p_tWbpdXtHEi7fENr41rVFGtiQ62zxgpBkqfYYIETBSzA-2o9M3s3ug8cYs37DZULBcSbfIZ3zASq9HsSK3zlnox4azLk-USxSKhX7t5kYUJ0WsUKUg2hh5BXkRwpGC7A-kMWT4JDhD94dYdJjWfTA7eAapiOS2oWs/s3328/Gemini_Generated_Image_m42kusm42kusm42k.png" 
+            alt="โรงงานผลิตกล่องกระดาษลูกฟูก เครื่องจักรทันสมัย" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-white">
+          <div className="max-w-3xl animate-in slide-in-from-left duration-700">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-1.5 rounded-full text-sm font-bold mb-6">
+              <ShieldCheck className="w-4 h-4 text-green-400" /> โรงงานผลิตโดยตรง มาตรฐาน
+            </div>
+            <h2 className="text-yellow-400 font-bold text-lg mb-2 uppercase tracking-wider">รับผลิตกล่องบรรจุภัณฑ์ครบวงจร</h2>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
+              กล่องไปรษณีย์ <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">ราคาโรงงาน</span>
+            </h1>
+            <p className="text-lg text-slate-300 mb-8 leading-relaxed max-w-2xl">
+              9TT PACKAGE รับผลิตกล่องลูกฟูก กล่องฝาชน กล่องไดคัท พิมพ์แบรนด์โลโก้ เริ่มต้นขั้นต่ำน้อย 
+              พร้อมบริการติดตั้งแฟรนไชส์ไปรษณีย์เอกชนทั่วไทย 
+              <strong className="text-white"> "การันตีคุณภาพโดยครูโอ๋"</strong>
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button 
+                onClick={() => setIsOrderModalOpen(true)}
+                className="px-8 py-4 bg-green-500 hover:bg-green-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-lg shadow-xl shadow-green-900/30 group"
+              >
+                <FileText className="w-6 h-6" /> ขอราคาผลิตกล่อง
+              </button>
+              <button onClick={() => window.location.href='#products'} className="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 rounded-xl font-bold transition-all flex items-center justify-center gap-2 group">
+                ดูโปรโมชั่น 750.- <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform"/>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* PROMO SECTION - 750 THB */}
+      <section className="bg-gradient-to-br from-red-600 to-red-800 py-12 text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-8 opacity-10"><Box size={200} /></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 shadow-2xl">
+            <div className="flex-1 text-center md:text-left">
+              <div className="inline-block bg-yellow-400 text-red-900 font-black px-3 py-1 rounded text-xs mb-3 transform -rotate-2">HOT DEAL</div>
+              <h2 className="text-3xl md:text-5xl font-black mb-2">โปรฯ 750 บาท <span className="text-yellow-300">ส่งฟรี!</span></h2>
+              <p className="text-red-100 text-lg mb-4">ชุดกล่องรวมไซส์ขายดี + อุปกรณ์แพ็คกิ้งครบจบในชุดเดียว เหมาะสำหรับแม่ค้าออนไลน์มือใหม่</p>
+              <ul className="text-sm space-y-2 mb-6 text-red-50 font-medium">
+                <li className="flex items-center gap-2 justify-center md:justify-start"><CheckCircle size={16} className="text-yellow-400"/> กล่องไปรษณีย์คละไซส์ 50-100 ใบ</li>
+                <li className="flex items-center gap-2 justify-center md:justify-start"><CheckCircle size={16} className="text-yellow-400"/> เทปกาวใส 2 ม้วน</li>
+                <li className="flex items-center gap-2 justify-center md:justify-start"><CheckCircle size={16} className="text-yellow-400"/> บับเบิ้ลกันกระแทก 1 ม้วน</li>
+              </ul>
+              <button onClick={() => setIsChatOpen(true)} className="inline-block px-8 py-3 bg-white text-red-600 font-bold rounded-xl hover:bg-red-50 transition-all shadow-lg">
+                ทักแชทสั่งชุดนี้เลย
+              </button>
+            </div>
+            <div className="shrink-0 relative group cursor-pointer" onClick={() => setIsChatOpen(true)}>
+              <div className="absolute -inset-4 bg-yellow-400 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity animate-pulse"></div>
+              <img 
+                src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiw80NzkdbC14Pah9NYxodOCkEOMxkSQaJ25qekatOEn5bYj0UZqTK5Rv1bLEoOWapjZSF4L8Kma5a1k9oC-yvL0o7FJFb9FsEI1Gu-YCSZVaFDNqAmCof6b9ziz_hvZH-rKMHvEORtB0a8TQYuxCoeug4ayUKJztqJV6d93HlRUZNN9WMBQwFxmrqRXQw/s16000-rw/a.jpg" 
+                alt="โปรโมชั่นกล่อง 750 บาท" 
+                className="relative w-64 h-64 object-cover rounded-2xl shadow-2xl border-4 border-white transform group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute -bottom-6 -right-6 bg-yellow-400 text-red-900 font-black w-24 h-24 rounded-full flex items-center justify-center text-xl shadow-lg transform rotate-12 z-20">
+                ส่งฟรี!
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Product Section */}
+      <section id="products" className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-black mb-4 text-slate-800">สินค้าและราคากลาง</h2>
+            <div className="w-24 h-1 bg-red-600 mx-auto rounded-full"></div>
+            <p className="mt-4 text-slate-500 max-w-2xl mx-auto">
+              เรารับผลิตกล่องลูกฟูกทุกเกรด (KA, KI, TS) ทั้งแบบ 3 ชั้น และ 5 ชั้น รองรับน้ำหนักได้ดี เหมาะสำหรับการขนส่งทุกประเภท
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <div className="bg-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all border border-slate-100 group">
+              <div className="flex items-center justify-between mb-4 border-b pb-4">
+                <div className="flex items-center gap-2 text-red-600 font-bold text-lg">
+                  <FileText className="w-6 h-6" /> ตารางราคากล่องมาตรฐาน
+                </div>
+                <span className="text-xs font-bold bg-slate-100 px-2 py-1 rounded text-slate-500">อัปเดตล่าสุด 2026</span>
+              </div>
+              <div className="aspect-[4/5] md:aspect-auto overflow-hidden rounded-xl bg-slate-50 relative">
+                <img 
+                  src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh5ZaSb4rQo2bV3RGbKAoo_GRxF7UQ-KHvHnfjKl4JLBcZ4mghAxDY2uutwm9hcNjQ-hvgppcmqIVkRuagB9BrdEmwirEI3hYou6y_3NqZcogRa7g94ZeoS1qZ_W_Sa1Or0tZBvkxRGk9N3mP4E-Eb53hpMlLHDD4-trdGnfTySv045DdgrKz501kOaVt4/s16000-rw/b.jpg" 
+                  alt="ตารางราคากล่องพัสดุ 9TT Package" 
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 cursor-zoom-in"
+                />
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all border border-slate-100 group">
+               <div className="flex items-center justify-between mb-4 border-b pb-4">
+                <div className="flex items-center gap-2 text-blue-600 font-bold text-lg">
+                  <Package className="w-6 h-6" /> อุปกรณ์แพ็คกิ้งครบวงจร
+                </div>
+                 <span className="text-xs font-bold bg-blue-50 px-2 py-1 rounded text-blue-600">พร้อมส่งทันที</span>
+              </div>
+              <div className="aspect-[4/5] md:aspect-auto overflow-hidden rounded-xl bg-slate-50 relative">
+                <img 
+                  src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiw80NzkdbC14Pah9NYxodOCkEOMxkSQaJ25qekatOEn5bYj0UZqTK5Rv1bLEoOWapjZSF4L8Kma5a1k9oC-yvL0o7FJFb9FsEI1Gu-YCSZVaFDNqAmCof6b9ziz_hvZH-rKMHvEORtB0a8TQYuxCoeug4ayUKJztqJV6d93HlRUZNN9WMBQwFxmrqRXQw/s16000-rw/a.jpg" 
+                  alt="อุปกรณ์แพ็คกิ้ง เชือก เทปกาว บับเบิ้ล" 
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 cursor-zoom-in"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Franchise Section */}
+      <section id="franchise" className="py-20 bg-blue-600 text-white relative overflow-hidden">
+        <div className="absolute right-0 top-0 w-1/3 h-full bg-white/5 skew-x-12 transform origin-top-right"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex flex-col md:flex-row items-center gap-12">
+            <div className="flex-1 text-center md:text-left">
+              <div className="inline-block bg-white/20 backdrop-blur-sm px-4 py-1 rounded-full text-sm font-bold mb-4 border border-white/30">
+                <Star className="inline w-4 h-4 text-yellow-300 mr-1"/> ธุรกิจน่าลงทุน 2026
+              </div>
+              <h2 className="text-3xl md:text-5xl font-black mb-6">แฟรนไชส์ไปรษณีย์เอกชน <br/><span className="text-yellow-300">สร้างรายได้ที่มั่นคง</span></h2>
+              <ul className="space-y-3 mb-8 text-blue-100 text-left mx-auto md:mx-0 max-w-lg">
+                <li className="flex items-center gap-3"><CheckCircle className="text-green-400 shrink-0 fill-current bg-white rounded-full"/> ระบบรับฝากส่งพัสดุครบวงจร (Flash, Kerry, EMS)</li>
+                <li className="flex items-center gap-3"><CheckCircle className="text-green-400 shrink-0 fill-current bg-white rounded-full"/> อุปกรณ์พร้อมเปิดร้าน (ชั้นวาง, เคาน์เตอร์, เครื่องพิมพ์)</li>
+                <li className="flex items-center gap-3"><CheckCircle className="text-green-400 shrink-0 fill-current bg-white rounded-full"/> สอนงานจนเป็น พร้อมทีมดูแลหลังการขายตลอดชีพ</li>
+              </ul>
+              <a 
+                href="https://docs.google.com/forms/d/e/1FAIpQLSfLzcfxzr15pbp-Ctbo_ynY9ksB65lDOKHYsM8amc3COnPB7A/viewform" 
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all shadow-blue-900/50"
+              >
+                <Edit3 className="w-5 h-5" /> ลงทะเบียนรับข้อมูลแฟรนไชส์
+              </a>
+            </div>
+            <div className="flex-1 w-full max-w-md">
+              <div className="bg-white/10 p-8 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl relative">
+                <Building className="w-16 h-16 text-yellow-400 mb-4 mx-auto" />
+                <h3 className="text-2xl font-bold mb-4 text-center">เริ่มต้นธุรกิจง่ายๆ กับมืออาชีพ</h3>
+                <p className="text-center text-blue-100 mb-6 font-light">
+                  "เราไม่ขายฝัน แต่เราขายอาชีพที่มั่นคง ด้วยประสบการณ์กว่า 10 ปีในวงการขนส่งและบรรจุภัณฑ์"
+                </p>
+                <div className="flex justify-center">
+                   <span className="font-handwriting text-2xl -rotate-2 text-yellow-300 border-b-2 border-yellow-300 pb-1">ครูโอ๋ การันตี!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Customer Reviews */}
+      <section id="reviews" className="py-24 bg-white relative overflow-hidden">
+        <div className="absolute top-0 left-0 text-slate-50 transform -translate-x-1/4 -translate-y-1/4">
+          <Quote size={400} fill="currentColor" />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <span className="text-red-600 font-bold uppercase tracking-wider text-sm mb-2 block">Voice of Customer</span>
+            <h2 className="text-3xl md:text-4xl font-black mb-4 text-slate-800">เสียงตอบรับจากลูกค้าจริง</h2>
+            <div className="w-24 h-1 bg-red-600 mx-auto rounded-full mb-6"></div>
+            <div className="flex justify-center gap-8 text-slate-600 font-medium">
+              <div className="flex items-center gap-2">
+                <ThumbsUp className="text-blue-500" size={20} /> ความพึงพอใจ 98%
+              </div>
+              <div className="flex items-center gap-2">
+                <Users className="text-green-500" size={20} /> ลูกค้ากว่า 5,000 ราย
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {reviews.map((review) => (
+              <div key={review.id} className="bg-slate-50 p-8 rounded-3xl relative border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                <Quote size={48} className="text-red-100 absolute top-6 right-6 fill-current" />
+                <div className="flex items-center gap-1 mb-6">
+                  {[...Array(review.stars)].map((_, i) => (
+                    <Star key={i} size={18} className="text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-slate-600 italic mb-8 leading-relaxed relative z-10">"{review.text}"</p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-md">
+                    <img src={review.image} alt={review.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900">{review.name}</h4>
+                    <p className="text-xs text-slate-500 font-bold uppercase">{review.role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Articles & FAQ (Combined for brevity) */}
+      <section id="blog" className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+             <div className="text-center md:text-left w-full md:w-auto">
+              <h2 className="text-3xl font-black mb-2 text-slate-800">บทความน่ารู้</h2>
+            </div>
+            <a href="https://9tt-postbox.com/category/blogger/" target="_blank" rel="noreferrer" className="hidden md:flex items-center gap-1 text-red-600 font-bold hover:gap-2 transition-all">อ่านบทความทั้งหมด <ArrowRight size={18}/></a>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+            {articles.map((article) => (
+              <a 
+                key={article.id} 
+                href="https://9tt-postbox.com/category/blogger/" 
+                target="_blank" 
+                rel="noreferrer" 
+                className="group block cursor-pointer hover:-translate-y-2 transition-transform duration-300 bg-white rounded-2xl p-4 shadow-sm border border-slate-100 hover:shadow-lg"
+              >
+                <div className="aspect-video bg-slate-100 rounded-xl overflow-hidden mb-4 relative">
+                  <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent">
+                     <span className="text-white text-xs font-bold bg-red-600 px-2 py-1 rounded">{article.date}</span>
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold mb-2 group-hover:text-red-600 transition-colors line-clamp-2 leading-tight">{article.title}</h3>
+                <div className="text-red-600 text-sm font-bold flex items-center gap-1">
+                  อ่านต่อ <ChevronRight size={16} />
+                </div>
+              </a>
+            ))}
+          </div>
+
+          {/* FAQ */}
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl font-black mb-8 text-center text-slate-800">Q&A คำถามที่พบบ่อย</h2>
+            <div className="space-y-4">
+              {faqs.map((faq, index) => (
+                <div 
+                  key={index} 
+                  className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden cursor-pointer"
+                  onClick={() => setActiveFaq(activeFaq === index ? null : index)}
+                >
+                  <div className="p-6 flex justify-between items-center gap-4 hover:bg-slate-50 transition-colors">
+                    <h3 className={`font-bold text-lg ${activeFaq === index ? 'text-red-600' : 'text-slate-800'}`}>
+                      {faq.q}
+                    </h3>
+                    <ChevronDown className={`shrink-0 transition-transform duration-300 ${activeFaq === index ? 'rotate-180 text-red-600' : 'text-slate-400'}`} />
+                  </div>
+                  <div className={`px-6 text-slate-600 leading-relaxed bg-white border-t border-slate-100 transition-all duration-300 overflow-hidden ${activeFaq === index ? 'max-h-48 py-6 opacity-100' : 'max-h-0 py-0 opacity-0'}`}>
+                    {faq.a}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer id="contact" className="bg-slate-900 text-slate-300 pt-20 pb-10 border-t-4 border-red-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-white text-2xl font-black">
+                <Box className="text-red-600 fill-current" /> 9TT PACKAGE
+              </div>
+              <p className="text-sm leading-relaxed text-slate-400">
+                บริษัท 9TT PACKAGE AND PRODUCT CO., LTD <br/>
+                ผู้เชี่ยวชาญด้านบรรจุภัณฑ์และไปรษณีย์ครบวงจร
+              </p>
+              <div className="flex gap-4 pt-2">
+                <a href="https://www.facebook.com/papacking/" target="_blank" rel="noreferrer" className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors transform hover:scale-110">
+                  <Facebook size={20} />
+                </a>
+                <a href="https://lin.ee/Torcu70" target="_blank" rel="noreferrer" className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white hover:bg-green-600 transition-colors transform hover:scale-110">
+                  <MessageCircle size={20} />
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-white font-bold mb-6 text-lg">ติดต่อเรา (Contact)</h4>
+              <ul className="space-y-4 text-sm">
+                <li className="flex items-start gap-3">
+                  <MapPin className="w-5 h-5 text-red-600 shrink-0 mt-1" />
+                  <span>88/2 หมู่ที่ 2 ตำบลกุดนกเปล้า <br/>อำเภอเมืองสระบุรี จ.สระบุรี 18000</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Phone className="w-5 h-5 text-red-600 shrink-0" />
+                  <span>086-888-3656 (ครูโอ๋) <br/> 099-218-8853</span>
+                </li>
+              </ul>
+            </div>
+            
+             <div>
+              <h4 className="text-white font-bold mb-6 text-lg">เอกสารและนโยบาย</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="https://myself2026.github.io/9tt/privacy.html" target="_blank" rel="noreferrer" className="hover:text-red-500 transition-colors flex items-center gap-2"><FileText size={12}/> นโยบายความเป็นส่วนตัว</a></li>
+                <li><a href="https://myself2026.github.io/9tt/terms.html" target="_blank" rel="noreferrer" className="hover:text-red-500 transition-colors flex items-center gap-2"><HelpCircle size={12}/> เงื่อนไขการให้บริการ</a></li>
+                <li><a href="https://9tt-postbox.com/category/blogger/" target="_blank" rel="noreferrer" className="hover:text-red-500 transition-colors flex items-center gap-2"><FileText size={12}/> บทความทั้งหมด</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-slate-800 pt-8 text-center text-xs text-slate-500">
+            <p>&copy; {new Date().getFullYear()} 9TT PACKAGE AND PRODUCT CO., LTD. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+
+      {/* PDPA Consent Popup */}
+      {showPDPA && (
+        <div className="fixed bottom-0 left-0 right-0 z-[60] bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] p-4 md:p-6 animate-in slide-in-from-bottom duration-500">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex-1 flex gap-4">
+              <div className="hidden md:flex h-12 w-12 bg-blue-100 rounded-full items-center justify-center text-blue-600 shrink-0">
+                <Cookie size={24} />
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 mb-1 flex items-center gap-2">
+                  <span className="md:hidden"><Cookie size={16} className="inline"/></span>
+                  เว็บไซต์นี้ใช้คุกกี้ (Cookies)
+                </h4>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  เราใช้คุกกี้เพื่อเพิ่มประสิทธิภาพและประสบการณ์ที่ดีในการใช้งานเว็บไซต์
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-3 w-full md:w-auto">
+              <button 
+                onClick={() => setShowPDPA(false)}
+                className="flex-1 md:flex-none px-6 py-2.5 rounded-xl border border-slate-300 text-slate-600 font-bold hover:bg-slate-50 transition-colors text-sm"
+              >
+                ปฏิเสธ
+              </button>
+              <button 
+                onClick={handleAcceptPDPA}
+                className="flex-1 md:flex-none px-8 py-2.5 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 transition-colors shadow-lg shadow-red-200 text-sm"
+              >
+                ยอมรับทั้งหมด
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Interactive Order Modal */}
+      {isOrderModalOpen && (
+        <div className="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="bg-red-600 p-6 flex justify-between items-center text-white">
+              <h3 className="text-xl font-bold flex items-center gap-2"><Edit3/> ขอใบเสนอราคา / สั่งซื้อ</h3>
+              <button onClick={() => setIsOrderModalOpen(false)} className="hover:bg-white/20 p-1 rounded-full"><X/></button>
+            </div>
+            
+            {submitSuccess ? (
+              <div className="p-12 text-center">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Check size={40} className="text-green-600" />
+                </div>
+                <h4 className="text-2xl font-bold text-green-600 mb-2">ส่งข้อมูลสำเร็จ!</h4>
+                <p className="text-slate-500">เจ้าหน้าที่จะติดต่อกลับภายใน 15 นาทีครับ</p>
+              </div>
+            ) : (
+              <form onSubmit={handleOrderSubmit} className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-1">ชื่อ-นามสกุล / บริษัท</label>
+                  <input required type="text" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none" placeholder="ระบุชื่อผู้ติดต่อ..." value={orderForm.name} onChange={e => setOrderForm({...orderForm, name: e.target.value})}/>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-1">เบอร์โทรศัพท์ติดต่อกลับ</label>
+                  <input required type="tel" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none" placeholder="08x-xxx-xxxx" value={orderForm.phone} onChange={e => setOrderForm({...orderForm, phone: e.target.value})}/>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-1">รายละเอียดสินค้าที่สนใจ</label>
+                  <textarea rows="3" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none" placeholder="เช่น กล่องฝาชน ขนาด C จำนวน 1000 ใบ..." value={orderForm.details} onChange={e => setOrderForm({...orderForm, details: e.target.value})}></textarea>
+                </div>
+                <button type="submit" disabled={isSubmitting} className="w-full py-4 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg flex justify-center items-center gap-2">
+                  {isSubmitting ? <><div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div> กำลังส่งข้อมูล...</> : <><Send size={20}/> ยืนยันข้อมูล</>}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Modern AI Chat Popup (Real Logic) */}
+      <div className="fixed bottom-4 right-4 z-[70] flex flex-col items-end gap-4 font-sans">
+        
+        {isChatOpen && (
+          <div className="w-[350px] h-[550px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-300 mb-2">
+            
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-4 flex justify-between items-center text-white shadow-md shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm relative">
+                  <Bot size={24} className="text-white"/>
+                  <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-blue-600"></span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm">9TT Smart Assistant</h3>
+                  <div className="text-[10px] text-blue-100 opacity-90">ตอบกลับในทันที</div>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={clearChat} className="hover:bg-white/20 p-1 rounded-full transition-colors" title="เริ่มใหม่"><RefreshCw size={18}/></button>
+                <button onClick={() => setIsChatOpen(false)} className="hover:bg-white/20 p-1 rounded-full transition-colors"><X size={18}/></button>
+              </div>
+            </div>
+
+            {/* Chat Body */}
+            <div className="flex-1 bg-slate-50 p-4 overflow-y-auto space-y-4">
+              {chatMessages.map((msg, idx) => (
+                <div key={idx} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                  {msg.type === 'bot' && (
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2 shrink-0 self-end">
+                      <Bot size={16} className="text-blue-600"/>
+                    </div>
+                  )}
+                  <div className={`max-w-[85%] p-3 text-sm leading-relaxed whitespace-pre-line rounded-2xl ${msg.type === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white text-slate-700 shadow-sm border border-slate-100 rounded-bl-none'}`}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+              
+              {/* Show Confirm Button only at summary stage */}
+              {chatStage === 'summary' && (
+                <div className="flex justify-center animate-in zoom-in duration-300">
+                  <a 
+                    href={getLineLink()} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex items-center gap-2 bg-[#00B900] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#009900] transition-all shadow-lg hover:scale-105"
+                  >
+                    <MessageCircle size={20} fill="white" /> ยืนยันส่งข้อมูลทาง LINE
+                  </a>
+                </div>
+              )}
+
+              {isTyping && (
+                <div className="flex justify-start animate-in fade-in duration-300">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2 shrink-0 self-end"><Bot size={16} className="text-blue-600"/></div>
+                  <div className="bg-white p-4 rounded-2xl rounded-bl-none shadow-sm border border-slate-100 flex gap-1">
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce delay-75"></span>
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce delay-150"></span>
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+
+            {/* Quick Actions (Hide when in specific flow) */}
+            {chatStage === 'idle' && (
+              <div className="p-3 bg-white border-t border-slate-100 overflow-x-auto whitespace-nowrap scrollbar-hide flex gap-2 shrink-0">
+                 <button onClick={() => handleQuickReply('📦 สนใจโปร 750 บาท')} className="px-3 py-1.5 bg-red-50 text-red-600 text-xs font-bold rounded-full border border-red-100 hover:bg-red-100 transition-colors">🔥 โปร 750.-</button>
+                 <button onClick={() => handleQuickReply('💰 ขอราคาผลิต')} className="px-3 py-1.5 bg-blue-50 text-blue-600 text-xs font-bold rounded-full border border-blue-100 hover:bg-blue-100 transition-colors">💰 เช็คราคา</button>
+                 <button onClick={() => handleQuickReply('🏢 สนใจแฟรนไชส์')} className="px-3 py-1.5 bg-green-50 text-green-600 text-xs font-bold rounded-full border border-green-100 hover:bg-green-100 transition-colors">🏢 แฟรนไชส์</button>
+              </div>
+            )}
+
+            {/* Input Area */}
+            <div className="p-3 bg-white border-t border-slate-100 flex items-center gap-2 shrink-0">
+              <input 
+                type="text" 
+                placeholder={chatStage === 'asking_name' ? "ระบุชื่อของคุณ..." : chatStage === 'asking_phone' ? "ระบุเบอร์โทร..." : "พิมพ์ข้อความ..."}
+                className="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-200 transition-all"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(chatInput)}
+              />
+              <button 
+                onClick={() => handleSendMessage(chatInput)}
+                className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors shadow-md disabled:opacity-50"
+                disabled={!chatInput.trim()}
+              >
+                <Send size={16} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Floating Toggle Button */}
+        {!isChatOpen && (
+          <button 
+            onClick={() => setIsChatOpen(true)}
+            className="group relative flex items-center justify-center w-16 h-16 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-[0_4px_20px_rgba(37,99,235,0.4)] transition-all hover:scale-110 active:scale-95"
+          >
+            <span className="absolute -top-1 -right-1 flex h-4 w-4">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500"></span>
+            </span>
+            <div className="absolute -left-32 bg-white text-slate-700 px-3 py-1 rounded-lg shadow-md text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+              สอบถาม / สั่งซื้อ
+            </div>
+            <Sparkles className="w-8 h-8 animate-pulse" />
+          </button>
+        )}
+      </div>
+
+    </div>
+  );
+};
+
+export default App;
