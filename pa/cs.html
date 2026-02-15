@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนที่การเดินทาง - PAPACKING</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap');
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f1f5f9;
+        }
+        .map-container {
+            position: relative;
+            padding-bottom: 75%; /* อัตราส่วน 4:3 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        .map-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .btn-nav {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+        .btn-line {
+            background-color: #06C755;
+        }
+        .btn-secondary {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+        }
+        .transition-active:active {
+            transform: scale(0.96);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header & Logo Section -->
+    <header class="bg-white p-6 text-center shadow-sm border-b border-gray-100">
+        <div class="flex justify-center mb-4">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgSBaU4REBZYAuCwkaoKFdKW936T7yKrqGttBQIIAyvkYT0xpv1q_Z5amzTNM3tipjf7o1SZhH9PXiOY8jiqmrzeN52AQFEKOKxR-XO_HywodPVzQbY2zCpdtWcbZ28AHZEQDvQyWeUSw84OIxuELsxFQ3ZKBEFgdgDhcW7VnmngSSyk5HVWegkbTw2Z3A/s500/LOGO.png" 
+                 alt="PAPACKING Logo" 
+                 class="h-20 w-auto object-contain drop-shadow-sm"
+                 onerror="this.src='https://via.placeholder.com/150?text=PAPACKING'">
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800 tracking-tight">PAPACKING</h1>
+        <p class="text-gray-500 text-sm mt-1">ยินดีต้อนรับครับ กดปุ่มด้านล่างเพื่อเริ่มนำทางหรือติดต่อเรา</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-4 md:p-8 max-w-2xl mx-auto w-full">
+        
+        <!-- แผนที่แบบฝัง -->
+        <div class="map-container mb-8">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15528.753841544129!2d100.951839!3d13.33855!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d4aefa77ae20f%3A0xfa2962c81cbf190!2z4LiB4Lil4LmI4Lit4LiH4LmE4Lib4Lij4Lip4LiT4Li14Lii4LmM4LiK4Lil4Lia4Li44Lij4Li1IOC4i-C4reC4h-C4nuC4peC4suC4quC4leC4tOC4gSBQQVBBQ0tJTkcg4Lij4LmJ4Liy4LiZ4LiE4Lij4Li54LmC4Lit4LmL!5e0!3m2!1sth!2sth!4v1771134788565!5m2!1sth!2sth" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+
+        <!-- ปุ่มหลัก: นำทาง -->
+        <div class="mb-8">
+            <a href="https://maps.app.goo.gl/4ZMMudYZcqAguEWt6" 
+               target="_blank"
+               class="btn-nav transition-active flex items-center justify-center gap-3 w-full py-5 px-6 rounded-2xl text-white text-xl font-bold shadow-xl shadow-emerald-200">
+                <i class="fa-solid fa-location-arrow text-2xl"></i>
+                เริ่มนำทางด้วย Google Maps
+            </a>
+        </div>
+
+        <!-- ส่วนการติดต่อ (Contact Section) -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-address-book text-emerald-500"></i>
+                ติดต่อเรา
+            </h2>
+            
+            <div class="grid grid-cols-1 gap-3">
+                <!-- เบอร์โทร 1 -->
+                <a href="tel:0863111288" class="transition-active flex items-center justify-between p-4 bg-gray-50 hover:bg-emerald-50 rounded-xl border border-gray-100 group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-emerald-600">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">เบอร์โทรศัพท์ 1</p>
+                            <p class="font-bold text-gray-800">086-311-1288</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-medium text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">โทรออก</span>
+                </a>
+
+                <!-- เบอร์โทร 2 -->
+                <a href="tel:0992188853" class="transition-active flex items-center justify-between p-4 bg-gray-50 hover:bg-emerald-50 rounded-xl border border-gray-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-emerald-600">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">เบอร์โทรศัพท์ 2</p>
+                            <p class="font-bold text-gray-800">099-218-8853</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-medium text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">โทรออก</span>
+                </a>
+
+                <!-- LINE -->
+                <a href="https://lin.ee/Yr9sqDZ" target="_blank" class="transition-active flex items-center justify-center gap-3 w-full py-4 px-6 rounded-xl text-white font-bold btn-line shadow-lg shadow-green-100 mt-2">
+                    <i class="fa-brands fa-line text-2xl"></i>
+                    เพิ่มเพื่อนทาง LINE
+                </a>
+            </div>
+        </div>
+
+        <!-- ส่วนข้อมูลเพิ่มเติม (Additional Links) -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-blue-500"></i>
+                ข้อมูลเพิ่มเติม
+            </h2>
+            <div class="grid grid-cols-1 gap-3">
+                <a href="https://myself2026.github.io/9tt/pa/" target="_blank" class="transition-active flex items-center justify-between p-4 bg-blue-50 hover:bg-blue-100 rounded-xl border border-blue-100">
+                    <div class="flex items-center gap-3 font-medium text-blue-800">
+                        <i class="fa-solid fa-globe"></i>
+                        เยี่ยมชมหน้าเว็บหลัก
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-blue-400"></i>
+                </a>
+                <a href="https://myself2026.github.io/9tt/pa/QPA.html" target="_blank" class="transition-active flex items-center justify-between p-4 bg-blue-50 hover:bg-blue-100 rounded-xl border border-blue-100">
+                    <div class="flex items-center gap-3 font-medium text-blue-800">
+                        <i class="fa-solid fa-file-lines"></i>
+                        รายละเอียด Q&A / ข้อมูลบริการ
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-blue-400"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- ปุ่มคัดลอกลิงก์ -->
+        <button onclick="copyToClipboard()" 
+                class="transition-active flex items-center justify-center gap-2 w-full py-3 px-6 rounded-xl bg-white border border-gray-200 text-gray-500 font-medium hover:bg-gray-50">
+            <i class="fa-solid fa-share-nodes"></i>
+            คัดลอกลิงก์แผนที่เพื่อส่งต่อ
+        </button>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="p-8 text-center text-gray-400 text-xs">
+        <p class="mb-1">&copy; 2024 PAPACKING - บริการบรรจุภัณฑ์และการขนส่ง</p>
+        <p>เปิดให้บริการทุกวัน สอบถามเส้นทางโทรหาเราได้ทันที</p>
+    </footer>
+
+    <!-- Toast Message -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-8 py-3 rounded-full shadow-2xl opacity-0 transition-opacity pointer-events-none z-50">
+        คัดลอกลิงก์สำเร็จ!
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            const link = "https://maps.app.goo.gl/4ZMMudYZcqAguEWt6";
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = link;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+            const toast = document.getElementById('toast');
+            toast.style.opacity = '1';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
