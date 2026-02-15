@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PA Packing AI Assistant</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Sarabun -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f0f2f5;
+        }
+        /* Custom Scrollbar */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Typing Animation */
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.3s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const LOGO_URL = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgSBaU4REBZYAuCwkaoKFdKW936T7yKrqGttBQIIAyvkYT0xpv1q_Z5amzTNM3tipjf7o1SZhH9PXiOY8jiqmrzeN52AQFEKOKxR-XO_HywodPVzQbY2zCpdtWcbZ28AHZEQDvQyWeUSw84OIxuELsxFQ3ZKBEFgdgDhcW7VnmngSSyk5HVWegkbTw2Z3A/s500/LOGO.png";
+
+        // --- ข้อมูล FAQ (Database) ---
+        const faqDatabase = [
+            // 1. หมวดสินค้าและราคา
+            { 
+                keywords: ["แคตตาล็อก", "catalog", "รายการสินค้า", "qpa", "ราคา", "ไซส์"], 
+                q: "ขอดูรายการสินค้าและราคา", 
+                a: "📦 ท่านสามารถดูรายการสินค้าทุกไซส์ (00, A-C) และราคาอัพเดทล่าสุดได้ที่นี่ครับ", 
+                link: "https://myself2026.github.io/9tt/pa/QPA.html", 
+                linkText: "ดูแคตตาล็อกสินค้า" 
+            },
+            { 
+                keywords: ["ขั้นต่ำ", "จำนวน", "น้อย"], 
+                q: "มีขั้นต่ำในการสั่งซื้อไหม?", 
+                a: "ไม่มีขั้นต่ำครับ 😊 ชิ้นเดียวเราก็ขาย หรือจะสั่งจำนวนมากก็ได้ราคาส่งโรงงานครับ" 
+            },
+            { 
+                keywords: ["ผลิต", "made to order", "สั่งทำ"], 
+                q: "สั่งผลิตกล่องตามขนาดได้ไหม?", 
+                a: "ได้เลยครับ! 🏭 เราเป็นโรงงานผลิตโดยตรง แจ้งสเปกและจำนวนเพื่อประเมินราคาได้เลยครับ" 
+            },
+            { 
+                keywords: ["พร้อมส่ง", "สต็อก", "เช็คของ"], 
+                q: "สินค้ามีพร้อมส่งไหม?", 
+                a: "สินค้ามาตรฐานมีสต็อกแน่นพร้อมส่งทันทีครับ 📦 ท่านสามารถเช็คสต็อกด่วนได้ทาง LINE เลยครับ" 
+            },
+
+            // 2. หมวดการจัดส่ง
+            { 
+                keywords: ["ส่งฟรี", "ค่าส่ง", "ค่าจัดส่ง", "750"], 
+                q: "ค่าส่งเท่าไหร่ / มีส่งฟรีไหม?", 
+                a: "ค่าส่งคิดตามน้ำหนักครับ แต่มีโปรโมชั่น ✨ส่งฟรี✨ เมื่อสั่งครบ 750 บาทขึ้นไป (ตามเงื่อนไข) ครับ", 
+                link: "https://myself2026.github.io/9tt/", 
+                linkText: "ดูโปรโมชั่นส่งฟรี" 
+            },
+            { 
+                keywords: ["เก็บเงินปลายทาง", "cod"], 
+                q: "มีเก็บเงินปลายทางไหม?", 
+                a: "ตอนนี้เรายังไม่มีบริการเก็บเงินปลายทางครับ ต้องรบกวนชำระเงินก่อนจัดส่งนะครับ 🙏" 
+            },
+
+            // 3. หมวดแฟรนไชส์
+            { 
+                keywords: ["สมัคร", "ลงทะเบียน", "ฟอร์ม", "form", "register", "ใบสมัคร"], 
+                q: "สนใจสมัครแฟรนไชส์", 
+                a: "ยินดีต้อนรับพาร์ทเนอร์ใหม่ครับ! 🎉 ท่านสามารถกรอกใบสมัครแฟรนไชส์ออนไลน์ได้ทันทีที่นี่ครับ 👇", 
+                link: "https://docs.google.com/forms/d/e/1FAIpQLSfLzcfxzr15pbp-Ctbo_ynY9ksB65lDOKHYsM8amc3COnPB7A/viewform", 
+                linkText: "📝 แบบฟอร์มใบสมัคร" 
+            },
+            { 
+                keywords: ["แฟรนไชส์", "paypoint", "ลงทุน"], 
+                q: "รายละเอียดแฟรนไชส์", 
+                a: "เริ่มต้นง่ายๆ หลักร้อยครับ! 💼 เรามีอุปกรณ์พร้อมเปิดร้านให้ สนใจทักแอดมินหรือดูรายละเอียดเพิ่มเติมได้ครับ" 
+            },
+
+            // 4. หมวดติดต่อและเว็บไซต์
+            { 
+                keywords: ["ติดต่อ", "contact", "แผนที่", "map", "เส้นทาง", "โทร", "ไลน์", "line", "ที่อยู่", "location", "ร้านอยู่ไหน"], 
+                q: "ติดต่อเรา / ขอแผนที่", 
+                a: "🏢 **พีเอ แพ็คกิ้ง (PA Packing)**\n104/48 หมู่ที่ 2 ถนนพระยาสัจจา ต.เสม็ด อ.เมืองชลบุรี จ.ชลบุรี 20000\n\n📞 โทร: 086-888-3656\n📘 FB: https://www.facebook.com/papacking\n💚 LINE สั่งซื้อ/เช็คสต็อก: https://lin.ee/Yr9sqDZ",
+                mapIframe: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3882.188383164948!2d100.94926387572696!3d13.338554806725627!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d4aefa77ae20f%3A0xfa2962c81cbf190!2z4LiB4Lil4LmI4Lit4LiH4LmE4Lib4Lij4Lip4LiT4Li14Lii4LmM4LiK4Lil4Lia4Li44Lij4Li1IOC4i-C4reC4h-C4nuC4peC4suC4quC4leC4tOC4gSBQQVBBQ0tJTkcg4Lij4LmJ4Liy4LiZ4LiE4Lij4Li54LmC4Lit4LmL!5e0!3m2!1sth!2sth!4v1771129873500!5m2!1sth!2sth" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
+                link: "https://maps.app.goo.gl/..." // Placeholder, mapIframe takes precedence
+            },
+            { 
+                keywords: ["เว็บไซต์", "website", "เว็บหลัก", "home", "หน้าแรก"], 
+                q: "เข้าสู่เว็บไซต์หลัก", 
+                a: "เข้าชมเว็บไซต์หลักของ PA Packing เพื่อดูข้อมูลทั้งหมดได้ที่นี่ครับ", 
+                link: "https://myself2026.github.io/9tt/", 
+                linkText: "🌐 เข้าสู่เว็บไซต์" 
+            }
+        ];
+
+        const initialCategories = [
+            "📦 รายการสินค้า & ราคา",
+            "📝 สมัครแฟรนไชส์",
+            "🚚 โปรโมชั่นส่งฟรี",
+            "📍 ติดต่อเรา / แผนที่",
+            "🌐 เว็บไซต์หลัก"
+        ];
+
+        // --- Components ---
+
+        const ChatBubble = ({ message, isUser }) => {
+            // ฟังก์ชันสำหรับแปลง URL ในข้อความให้เป็นลิงก์กดได้
+            const renderText = (text) => {
+                const parts = text.split(/(https?:\/\/[^\s]+)/g);
+                return parts.map((part, i) => {
+                    if (part.match(/^https?:\/\//)) {
+                        return (
+                            <a 
+                                key={i} 
+                                href={part} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className={`font-bold underline break-all ${isUser ? 'text-blue-100 hover:text-white' : 'text-blue-600 hover:text-blue-800'}`}
+                            >
+                                {part}
+                            </a>
+                        );
+                    }
+                    return part;
+                });
+            };
+
+            return (
+                <div className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'} mb-4 fade-in-up`}>
+                    {!isUser && (
+                        <img 
+                            src={LOGO_URL} 
+                            alt="PA Logo" 
+                            className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 shadow-sm border border-gray-100 bg-white" 
+                        />
+                    )}
+                    <div className={`max-w-[85%] rounded-2xl px-4 py-3 shadow-sm ${
+                        isUser 
+                            ? 'bg-blue-600 text-white rounded-br-none' 
+                            : 'bg-white text-gray-800 rounded-bl-none border border-gray-100'
+                    }`}>
+                        <div className="whitespace-pre-line text-sm md:text-base leading-relaxed">
+                            {renderText(message.text)}
+                        </div>
+                        
+                        {/* Render Map Iframe if available */}
+                        {message.mapIframe && (
+                            <div className="mt-3 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                                <div dangerouslySetInnerHTML={{__html: message.mapIframe}} />
+                            </div>
+                        )}
+
+                        {message.link && !message.mapIframe && (
+                            <a 
+                                href={message.link} 
+                                target="_blank" 
+                                className={`mt-3 inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-bold w-full transition-colors ${
+                                    isUser 
+                                    ? 'bg-white/20 text-white hover:bg-white/30' 
+                                    : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                                }`}
+                            >
+                                {message.linkText} <i data-lucide="external-link" className="w-4 h-4 ml-1"></i>
+                            </a>
+                        )}
+                        <div className={`text-[10px] mt-1 text-right ${isUser ? 'text-blue-200' : 'text-gray-400'}`}>
+                            {message.time}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const TypingIndicator = () => (
+            <div className="flex w-full justify-start mb-4 fade-in-up">
+                <img 
+                    src={LOGO_URL} 
+                    alt="PA Logo" 
+                    className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 shadow-sm border border-gray-100 bg-white" 
+                />
+                <div className="bg-white border border-gray-100 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
+                </div>
+            </div>
+        );
+
+        const SuggestionChip = ({ text, onClick }) => (
+            <button 
+                onClick={onClick}
+                className="whitespace-nowrap px-4 py-2 bg-white border border-blue-100 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-50 active:bg-blue-100 transition-colors shadow-sm"
+            >
+                {text}
+            </button>
+        );
+
+        const App = () => {
+            const [messages, setMessages] = useState([
+                { text: "สวัสดีครับ! ยินดีต้อนรับสู่ PA Packing 🙏\n\nสนใจสินค้า สมัครแฟรนไชส์ หรือสอบถามเรื่องการจัดส่ง เลือกหัวข้อด้านล่างได้เลยครับ 👇\n\n📲 สอบถามราคา/เช็คสต็อก ทักไลน์: https://lin.ee/Yr9sqDZ", isUser: false, time: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) }
+            ]);
+            const [isTyping, setIsTyping] = useState(false);
+            const [inputValue, setInputValue] = useState("");
+            const [suggestions, setSuggestions] = useState(initialCategories);
+            const messagesEndRef = useRef(null);
+
+            const scrollToBottom = () => {
+                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            };
+
+            useEffect(() => {
+                scrollToBottom();
+                lucide.createIcons();
+            }, [messages, isTyping, suggestions]);
+
+            const handleUserMessage = async (text) => {
+                // 1. Add User Message
+                const newMessage = { 
+                    text: text, 
+                    isUser: true, 
+                    time: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) 
+                };
+                setMessages(prev => [...prev, newMessage]);
+                setInputValue("");
+                setSuggestions([]); // Clear suggestions temporarily
+                setIsTyping(true);
+
+                // 2. Simulate AI Processing Delay
+                setTimeout(() => {
+                    const response = generateResponse(text);
+                    setIsTyping(false);
+                    
+                    // --- สำคัญ: แนบลิงก์ Line ไปในทุกข้อความตอบกลับ ---
+                    const lineCTA = "\n\n👉 สั่งซื้อทาง LINE: https://lin.ee/Yr9sqDZ";
+                    const finalText = response.text + lineCTA;
+
+                    // 3. Add Bot Message
+                    setMessages(prev => [...prev, {
+                        text: finalText,
+                        link: response.link,
+                        linkText: response.linkText,
+                        mapIframe: response.mapIframe, // Pass map iframe content
+                        isUser: false,
+                        time: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
+                    }]);
+
+                    // 4. Update Suggestions based on context or reset
+                    if (response.resetSuggestions) {
+                        setSuggestions(initialCategories);
+                    } else if (response.nextSuggestions) {
+                        setSuggestions(response.nextSuggestions);
+                    } else {
+                        setSuggestions(initialCategories);
+                    }
+
+                }, 800); 
+            };
+
+            const generateResponse = (input) => {
+                const lowerInput = input.toLowerCase();
+
+                // Logic 1: Check if input matches a Category Button text directly
+                // This helps when clicking the initial buttons
+                if (input.includes("สมัครแฟรนไชส์")) {
+                     const found = faqDatabase.find(item => item.keywords.includes("สมัคร"));
+                     return { 
+                        text: found.a, 
+                        link: found.link, 
+                        linkText: found.linkText,
+                        resetSuggestions: true 
+                    };
+                }
+                if (input.includes("รายการสินค้า")) {
+                     const found = faqDatabase.find(item => item.keywords.includes("แคตตาล็อก"));
+                     return { 
+                        text: found.a, 
+                        link: found.link, 
+                        linkText: found.linkText,
+                        nextSuggestions: ["มีขั้นต่ำไหม?", "สั่งผลิตได้ไหม?", "สินค้าพร้อมส่งไหม?"]
+                    };
+                }
+                if (input.includes("โปรโมชั่นส่งฟรี") || input.includes("ส่งฟรี")) {
+                     const found = faqDatabase.find(item => item.keywords.includes("ส่งฟรี"));
+                     return { 
+                        text: found.a, 
+                        link: found.link, 
+                        linkText: found.linkText,
+                        nextSuggestions: ["เช็คสถานะพัสดุ", "เก็บเงินปลายทางไหม?"]
+                    };
+                }
+                if (input.includes("ติดต่อเรา")) {
+                     const found = faqDatabase.find(item => item.keywords.includes("ติดต่อ"));
+                     return { 
+                        text: found.a, 
+                        link: found.link, 
+                        linkText: found.linkText,
+                        resetSuggestions: true
+                    };
+                }
+                 if (input.includes("เว็บไซต์หลัก")) {
+                     const found = faqDatabase.find(item => item.keywords.includes("เว็บไซต์"));
+                     return { 
+                        text: found.a, 
+                        link: found.link, 
+                        linkText: found.linkText,
+                        resetSuggestions: true
+                    };
+                }
+
+
+                // Logic 2: Keyword Matching from Database
+                const found = faqDatabase.find(item => 
+                    item.keywords.some(keyword => lowerInput.includes(keyword)) || 
+                    item.q === input
+                );
+
+                if (found) {
+                    return { 
+                        text: found.a, 
+                        link: found.link, 
+                        linkText: found.linkText,
+                        resetSuggestions: true 
+                    };
+                }
+
+                // Logic 3: Fallback
+                return { 
+                    text: "ขออภัยครับ ผมอาจจะยังไม่เข้าใจคำถามนี้ 😅 \nท่านสามารถเลือกหัวข้อด้านล่าง หรือแอดไลน์คุยกับแอดมินได้เลยครับ",
+                    resetSuggestions: true 
+                };
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!inputValue.trim()) return;
+                handleUserMessage(inputValue);
+            };
+
+            return (
+                <div className="flex flex-col h-screen max-w-lg mx-auto bg-gray-50 shadow-2xl overflow-hidden relative">
+                    
+                    {/* Header */}
+                    <header className="bg-white px-4 py-3 shadow-sm flex items-center justify-between z-10">
+                        <div className="flex items-center gap-3">
+                            <div className="relative">
+                                <img 
+                                    src={LOGO_URL} 
+                                    alt="PA Logo" 
+                                    className="w-10 h-10 rounded-full object-cover shadow-sm border border-gray-100 bg-white" 
+                                />
+                                <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                            </div>
+                            <div>
+                                <h1 className="font-bold text-gray-800 text-base">PA Packing AI</h1>
+                                <p className="text-xs text-green-600 font-medium flex items-center gap-1">
+                                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Online
+                                </p>
+                            </div>
+                        </div>
+                        <a href="https://lin.ee/vzUxlT3" target="_blank" className="w-9 h-9 bg-[#06C755] rounded-full flex items-center justify-center text-white hover:bg-[#05b34c] transition-colors">
+                            <i className="font-bold text-lg">L</i>
+                        </a>
+                    </header>
+
+                    {/* Chat Area */}
+                    <div className="flex-grow overflow-y-auto p-4 space-y-2 bg-[#f0f2f5]" style={{backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '20px 20px'}}>
+                        
+                        {/* Messages */}
+                        {messages.map((msg, index) => (
+                            <ChatBubble key={index} message={msg} isUser={msg.isUser} />
+                        ))}
+                        
+                        {/* Typing Indicator */}
+                        {isTyping && <TypingIndicator />}
+                        
+                        <div ref={messagesEndRef} />
+                    </div>
+
+                    {/* Input Area */}
+                    <div className="bg-white border-t border-gray-200">
+                        
+                        {/* Suggestions (Horizontal Scroll) */}
+                        {suggestions.length > 0 && !isTyping && (
+                            <div className="flex gap-2 p-3 overflow-x-auto scrollbar-hide border-b border-gray-100 bg-gray-50">
+                                {suggestions.map((text, index) => (
+                                    <SuggestionChip key={index} text={text} onClick={() => handleUserMessage(text)} />
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Text Input */}
+                        <form onSubmit={handleSubmit} className="p-3 flex items-center gap-2">
+                            <button 
+                                type="button" 
+                                onClick={() => setSuggestions(initialCategories)}
+                                className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                                title="Start Over"
+                            >
+                                <i data-lucide="refresh-ccw" className="w-5 h-5"></i>
+                            </button>
+                            <input
+                                type="text"
+                                value={inputValue}
+                                onChange={(e) => setInputValue(e.target.value)}
+                                placeholder="พิมพ์คำถาม หรือเลือกหัวข้อ..."
+                                className="flex-grow bg-gray-100 text-gray-800 rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm"
+                                disabled={isTyping}
+                            />
+                            <button 
+                                type="submit" 
+                                disabled={!inputValue.trim() || isTyping}
+                                className={`p-2.5 rounded-full flex items-center justify-center transition-all ${
+                                    inputValue.trim() && !isTyping
+                                        ? 'bg-blue-600 text-white shadow-md hover:bg-blue-700 transform hover:scale-105' 
+                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                }`}
+                            >
+                                <i data-lucide="send" className="w-5 h-5"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
