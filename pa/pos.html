@@ -51,7 +51,7 @@
 <body class="bg-gray-50 text-gray-800">
 
     <!-- Navigation Menu -->
-    <nav class="bg-white shadow-md sticky top-0 z-50">
+    <nav class="bg-white shadow-md sticky top-0 z-40">
         <div class="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
             <div class="flex items-center space-x-3">
                 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgSBaU4REBZYAuCwkaoKFdKW936T7yKrqGttBQIIAyvkYT0xpv1q_Z5amzTNM3tipjf7o1SZhH9PXiOY8jiqmrzeN52AQFEKOKxR-XO_HywodPVzQbY2zCpdtWcbZ28AHZEQDvQyWeUSw84OIxuELsxFQ3ZKBEFgdgDhcW7VnmngSSyk5HVWegkbTw2Z3A/s500/LOGO.png" 
@@ -419,10 +419,38 @@
                     </summary>
                     <p class="mt-3 text-gray-600">คุณสามารถกรอกรายละเอียดใน <a href="https://docs.google.com/forms/d/e/1FAIpQLSfLzcfxzr15pbp-Ctbo_ynY9ksB65lDOKHYsM8amc3COnPB7A/viewform" target="_blank" class="text-red-600 font-bold underline">ใบสมัครออนไลน์</a> ได้เลยครับ หลังจากนั้นทีมงาน Paypoint Service จะติดต่อกลับเพื่อให้ข้อมูลขั้นตอนการเปิดร้านและการติดตั้งระบบครับ</p>
                 </details>
+                <details class="group border-b pb-4">
+                    <summary class="flex justify-between items-center cursor-pointer font-bold text-gray-700 hover:text-primary transition">
+                        สามารถออกใบกำกับภาษีได้หรือไม่?
+                        <span class="transition group-open:rotate-180 text-primary"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <p class="mt-3 text-gray-600">ได้ครับ เราสามารถออกใบกำกับภาษีถูกต้องตามกฎหมายได้ โดยลูกค้าสามารถแจ้งรายละเอียดการออกใบกำกับภาษีผ่านทาง LINE @papacking ขณะสั่งซื้อสินค้าได้เลยครับ</p>
+                </details>
+                <details class="group border-b pb-4">
+                    <summary class="flex justify-between items-center cursor-pointer font-bold text-gray-700 hover:text-primary transition">
+                        สินค้าอุปกรณ์อิเล็กทรอนิกส์มีการรับประกันหรือไม่?
+                        <span class="transition group-open:rotate-180 text-primary"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <p class="mt-3 text-gray-600">อุปกรณ์อิเล็กทรอนิกส์ส่วนใหญ่ เช่น เครื่องพิมพ์ใบเสร็จและเครื่องยิงบาร์โค้ด มีการรับประกันศูนย์ไทย (ระยะเวลาขึ้นอยู่กับรุ่น) ยกเว้นเครื่องชั่งน้ำหนักบางรุ่นที่ระบุไว้ชัดเจนว่าไม่มีประกันครับ</p>
+                </details>
             </div>
         </section>
 
     </main>
+
+    <!-- PDPA Popup -->
+    <div id="pdpa-popup" class="fixed bottom-0 left-0 w-full bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50 p-6 hidden border-t border-gray-200">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="text-sm text-gray-600">
+                <h4 class="font-bold text-gray-800 mb-1 text-lg"><i class="fas fa-cookie-bite text-yellow-500 mr-2"></i> เว็บไซต์นี้ใช้คุกกี้ (Cookies)</h4>
+                <p>เราใช้คุกกี้เพื่อเพิ่มประสบการณ์และความพึงพอใจในการใช้งานเว็บไซต์ หากคุณกด "ยอมรับ" หรือใช้งานเว็บไซต์ต่อ ถือว่าคุณยอมรับนโยบายความเป็นส่วนตัวและการใช้งานคุกกี้ของพีเอ แพ็คกิ้ง</p>
+            </div>
+            <div class="flex gap-3 shrink-0">
+                <button onclick="acceptPDPA()" class="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-800 transition text-sm shadow-md">ยอมรับทั้งหมด</button>
+                <button onclick="closePDPA()" class="text-gray-500 hover:text-gray-700 font-semibold px-4 py-2 text-sm">ปฏิเสธ</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer & Contact -->
     <footer class="bg-gray-900 text-white py-12">
@@ -447,6 +475,24 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Check PDPA Consent
+        window.addEventListener('load', function() {
+            if (!localStorage.getItem('pdpa_consent')) {
+                document.getElementById('pdpa-popup').classList.remove('hidden');
+            }
+        });
+
+        function acceptPDPA() {
+            localStorage.setItem('pdpa_consent', 'accepted');
+            document.getElementById('pdpa-popup').classList.add('hidden');
+        }
+
+        function closePDPA() {
+            document.getElementById('pdpa-popup').classList.add('hidden');
+        }
+    </script>
 
 </body>
 </html>
